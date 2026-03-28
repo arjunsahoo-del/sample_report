@@ -3,878 +3,639 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AY26 Student Report — East Region</title>
+<title>AY26 · East Region Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f172a'/%3E%3Crect x='4' y='4' width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='8' y='18' width='4' height='8' rx='1.5' fill='white' opacity='.9'/%3E%3Crect x='14' y='13' width='4' height='13' rx='1.5' fill='white' opacity='.9'/%3E%3Crect x='20' y='8' width='4' height='18' rx='1.5' fill='white' opacity='.9'/%3E%3C/svg%3E"/>
 <style>
-  :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --surface2: #1a2236;
-    --border: #1e2d45;
-    --accent: #3b82f6;
-    --accent2: #06b6d4;
-    --accent3: #8b5cf6;
-    --green: #10b981;
-    --orange: #f59e0b;
-    --red: #ef4444;
-    --text: #f1f5f9;
-    --muted: #64748b;
-    --card-glow: 0 0 30px rgba(59,130,246,0.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-  }
+:root{
+  --bg:#070b14;--bg2:#0d1425;--surface:#0f1b2d;--surface2:#142035;--surface3:#1a2a42;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.10);
+  --blue:#3b82f6;--blue-l:#60a5fa;--cyan:#06b6d4;--purple:#8b5cf6;--purple-l:#a78bfa;
+  --green:#10b981;--green-l:#34d399;--orange:#f59e0b;--orange-l:#fbbf24;
+  --pink:#ec4899;--red:#ef4444;--red-l:#f87171;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
+  --glow-blue:0 0 40px rgba(59,130,246,0.12);--glow-sm:0 0 20px rgba(59,130,246,0.06);
+  --radius:16px;--radius-sm:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px;}
 
-  .header {
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 28px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-  }
-  .header-left h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px; font-weight: 800;
-    background: linear-gradient(90deg, #60a5fa, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
-  }
-  .header-left p { color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
-  .badge {
-    background: rgba(59,130,246,0.15);
-    border: 1px solid rgba(59,130,246,0.3);
-    color: #60a5fa;
-    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
-  }
-  .refresh-btn {
-    background: var(--accent); color: white;
-    border: none; padding: 8px 18px; border-radius: 8px;
-    font-size: 13px; font-weight: 500; cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    transition: all 0.2s;
-  }
-  .refresh-btn:hover { background: #2563eb; transform: translateY(-1px); }
-  .status-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+/* HEADER */
+.header{background:linear-gradient(180deg,rgba(15,27,45,0.98)0%,rgba(10,16,30,0.95)100%);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.4),transparent);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 16px rgba(59,130,246,0.35);flex-shrink:0;}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.3px;}
+.logo-text p{font-size:11px;color:var(--text3);margin-top:1px;font-weight:500;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.pill{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue-l);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.3px;}
+.pill.green{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);color:var(--green-l);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.2);animation:livepulse 2s ease-in-out infinite;}
+@keyframes livepulse{0%,100%{box-shadow:0 0 0 3px rgba(16,185,129,0.2)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0.05)}}
+.refresh-btn{background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(59,130,246,0.3);transition:all 0.2s;letter-spacing:0.3px;}
+.refresh-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(59,130,246,0.4);}
+.refresh-btn:active{transform:translateY(0);}
 
-  #loading {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    height: 60vh; gap: 20px;
-  }
-  .spinner {
-    width: 48px; height: 48px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  #loading p { color: var(--muted); font-size: 14px; }
+/* LOADING */
+#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 68px);gap:20px;}
+.loader-ring{width:52px;height:52px;position:relative;}
+.loader-ring::before,.loader-ring::after{content:'';position:absolute;inset:0;border-radius:50%;border:2.5px solid transparent;}
+.loader-ring::before{border-top-color:var(--blue);animation:spin 0.9s linear infinite;}
+.loader-ring::after{border-top-color:var(--purple);opacity:0.4;animation:spin 0.9s linear infinite reverse;inset:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{color:var(--text2);font-size:13px;font-weight:500;}
 
-  #dashboard { display: none; }
-  .container { max-width: 1400px; margin: 0 auto; padding: 32px 40px; }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 2px;
-    color: var(--muted); margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .section-title::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
+/* LAYOUT */
+#dashboard{display:none;animation:fadein 0.4s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.container{max-width:1480px;margin:0 auto;padding:36px 40px 60px;}
+.section-label{display:flex;align-items:center;gap:12px;margin-bottom:20px;margin-top:8px;}
+.section-label span{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--text3);white-space:nowrap;}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);}
 
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px; margin-bottom: 40px;
-  }
-  .kpi-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px 24px;
-    box-shadow: var(--card-glow);
-    position: relative; overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(59,130,246,0.15); }
-  .kpi-card::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-  }
-  .kpi-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
-  .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #ec4899); }
-  .kpi-card.green::before { background: linear-gradient(90deg, #10b981, #06b6d4); }
-  .kpi-card.orange::before { background: linear-gradient(90deg, #f59e0b, #ef4444); }
-  .kpi-card.teal::before { background: linear-gradient(90deg, #06b6d4, #3b82f6); }
-  .kpi-card.pink::before { background: linear-gradient(90deg, #ec4899, #8b5cf6); }
-  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-  .kpi-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px; font-weight: 800; line-height: 1;
-  }
-  .kpi-card.blue .kpi-value { color: #60a5fa; }
-  .kpi-card.purple .kpi-value { color: #a78bfa; }
-  .kpi-card.green .kpi-value { color: #34d399; }
-  .kpi-card.orange .kpi-value { color: #fbbf24; }
-  .kpi-card.teal .kpi-value { color: #22d3ee; }
-  .kpi-card.pink .kpi-value { color: #f472b6; }
-  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:40px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px 18px;position:relative;overflow:hidden;cursor:default;transition:transform 0.25s cubic-bezier(.2,.8,.3,1),box-shadow 0.25s,border-color 0.2s;}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4),var(--glow-blue);border-color:var(--border2);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,linear-gradient(90deg,#3b82f6,#06b6d4));}
+.kpi-card::after{content:'';position:absolute;width:90px;height:90px;border-radius:50%;background:var(--cb,rgba(59,130,246,0.08));top:-25px;right:-25px;filter:blur(22px);pointer-events:none;}
+.kpi-card[data-c="blue"]  {--kc:linear-gradient(90deg,#3b82f6,#06b6d4);--cb:rgba(59,130,246,0.15);--cv:#60a5fa;}
+.kpi-card[data-c="purple"]{--kc:linear-gradient(90deg,#8b5cf6,#ec4899);--cb:rgba(139,92,246,0.15);--cv:#a78bfa;}
+.kpi-card[data-c="green"] {--kc:linear-gradient(90deg,#10b981,#06b6d4);--cb:rgba(16,185,129,0.15);--cv:#34d399;}
+.kpi-card[data-c="teal"]  {--kc:linear-gradient(90deg,#06b6d4,#3b82f6);--cb:rgba(6,182,212,0.15);--cv:#22d3ee;}
+.kpi-card[data-c="orange"]{--kc:linear-gradient(90deg,#f59e0b,#ef4444);--cb:rgba(245,158,11,0.15);--cv:#fbbf24;}
+.kpi-card[data-c="pink"]  {--kc:linear-gradient(90deg,#ec4899,#8b5cf6);--cb:rgba(236,72,153,0.15);--cv:#f472b6;}
+.kpi-card[data-c="indigo"]{--kc:linear-gradient(90deg,#6366f1,#3b82f6);--cb:rgba(99,102,241,0.15);--cv:#818cf8;}
+.kpi-card[data-c="rose"]  {--kc:linear-gradient(90deg,#f43f5e,#ec4899);--cb:rgba(244,63,94,0.15);--cv:#fb7185;}
+.kpi-icon{font-size:17px;margin-bottom:11px;display:block;}
+.kpi-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.kpi-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;color:var(--cv,#60a5fa);}
+.kpi-sub{font-size:10.5px;color:var(--text3);margin-top:8px;line-height:1.5;}
 
-  .charts-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px; margin-bottom: 40px;
-  }
-  .charts-grid.three { grid-template-columns: 1fr 1fr 1fr; }
-  .chart-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px; padding: 24px;
-    box-shadow: var(--card-glow);
-  }
-  .chart-card.full { grid-column: 1 / -1; }
-  .chart-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px; font-weight: 700;
-    color: var(--text); margin-bottom: 4px;
-  }
-  .chart-sub { font-size: 11px; color: var(--muted); margin-bottom: 20px; }
-  .chart-wrap { position: relative; height: 260px; }
-  .chart-wrap.tall { height: 320px; }
-  .chart-wrap.short { height: 200px; }
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
 
-  .table-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-    margin-bottom: 20px;
-    box-shadow: var(--card-glow);
-  }
-  .table-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .table-header h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px; font-weight: 700;
-  }
-  .table-header span { font-size: 11px; color: var(--muted); }
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    background: var(--surface2);
-    padding: 10px 16px; text-align: left;
-    font-size: 11px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 1px;
-    color: var(--muted); border-bottom: 1px solid var(--border);
-  }
-  td {
-    padding: 11px 16px; font-size: 13px;
-    border-bottom: 1px solid rgba(30,45,69,0.5);
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(59,130,246,0.04); }
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--glow-sm);transition:border-color 0.2s;}
+.card:hover{border-color:var(--border2);}
+.card.s2{grid-column:span 2;}
+.card.s3{grid-column:span 3;}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:3px;}
+.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+.card-sub{font-size:10.5px;color:var(--text3);margin-bottom:16px;margin-top:3px;}
+.chip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(59,130,246,0.12);color:var(--blue-l);border:1px solid rgba(59,130,246,0.2);white-space:nowrap;}
+.cw{position:relative;}
+.h160{height:160px;}.h200{height:200px;}.h220{height:220px;}.h260{height:260px;}.h300{height:300px;}.h340{height:340px;}
 
-  .tag {
-    display: inline-block; padding: 2px 8px;
-    border-radius: 4px; font-size: 11px; font-weight: 500;
-  }
-  .tag-green { background: rgba(16,185,129,0.15); color: #34d399; }
-  .tag-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
-  .tag-orange { background: rgba(245,158,11,0.15); color: #fbbf24; }
-  .tag-red { background: rgba(239,68,68,0.15); color: #f87171; }
-  .tag-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
-  .tag-gray { background: rgba(100,116,139,0.15); color: #94a3b8; }
+/* TABLE */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--surface2);padding:10px 13px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:11px 13px;font-size:12.5px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(59,130,246,0.03);}
+.tc{text-align:center;}
 
-  .progress-bar {
-    height: 6px; background: var(--border);
-    border-radius: 3px; overflow: hidden; margin-top: 4px;
-  }
-  .progress-fill {
-    height: 100%; border-radius: 3px;
-    background: linear-gradient(90deg, #3b82f6, #06b6d4);
-    transition: width 0.6s ease;
-  }
+/* TAGS */
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10.5px;font-weight:600;}
+.tag-blue  {background:rgba(59,130,246,0.12); color:#60a5fa; border:1px solid rgba(59,130,246,0.2);}
+.tag-green {background:rgba(16,185,129,0.12); color:#34d399; border:1px solid rgba(16,185,129,0.2);}
+.tag-purple{background:rgba(139,92,246,0.12); color:#a78bfa; border:1px solid rgba(139,92,246,0.2);}
+.tag-orange{background:rgba(245,158,11,0.12); color:#fbbf24; border:1px solid rgba(245,158,11,0.2);}
+.tag-red   {background:rgba(239,68,68,0.12);  color:#f87171; border:1px solid rgba(239,68,68,0.2);}
+.tag-teal  {background:rgba(6,182,212,0.12);  color:#22d3ee; border:1px solid rgba(6,182,212,0.2);}
+.tag-gray  {background:rgba(100,116,139,0.12);color:#94a3b8; border:1px solid rgba(100,116,139,0.2);}
 
-  .payment-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin-bottom: 40px;
-  }
-  .payment-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 18px;
-  }
-  .payment-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-  .payment-count {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px; font-weight: 800; color: var(--text);
-  }
-  .payment-pct { font-size: 11px; color: var(--muted); margin-top: 2px; }
+/* PROGRESS */
+.bar{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:5px;}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#06b6d4);transition:width 0.8s cubic-bezier(.2,.8,.3,1);}
 
-  .elig-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 20px; margin-bottom: 40px;
-  }
+/* PAYMENT */
+.pay-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:40px;}
+.pay-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;transition:transform 0.2s,border-color 0.2s;}
+.pay-card:hover{transform:translateY(-2px);border-color:var(--border2);}
+.pay-label{font-size:9.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+.pay-count{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.pay-pct{font-size:10px;color:var(--text3);margin-top:2px;}
 
-  .footer {
-    text-align: center; padding: 32px;
-    color: var(--muted); font-size: 12px;
-    border-top: 1px solid var(--border);
-  }
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:8px;padding:4px 0;}
+.f-row{display:flex;align-items:center;gap:10px;}
+.f-lbl{font-size:11px;color:var(--text2);width:175px;flex-shrink:0;font-weight:500;}
+.f-bw{flex:1;background:var(--surface3);border-radius:4px;overflow:hidden;height:24px;}
+.f-bf{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:10.5px;font-weight:700;transition:width 1s cubic-bezier(.2,.8,.3,1);}
+.f-num{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);width:55px;text-align:right;flex-shrink:0;}
 
-  .num { font-family: 'Syne', sans-serif; font-weight: 700; }
+/* STAT ROW */
+.stat-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.s-label{font-size:9.5px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;}
+.s-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-top:1px;}
+.s-sub{font-size:10px;color:var(--text3);}
 
-  .error-box {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
-    border-radius: 12px; padding: 20px 24px;
-    color: #f87171; font-size: 13px; line-height: 1.6;
-    margin: 20px 0;
-  }
+/* ERROR */
+.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:20px 24px;color:#f87171;font-size:13px;line-height:1.7;}
 
-  @media(max-width: 900px) {
-    .charts-grid, .charts-grid.three, .elig-grid { grid-template-columns: 1fr; }
-    .container { padding: 20px; }
-    .header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
-  }
+/* FOOTER */
+.footer{text-align:center;padding:28px 40px;color:var(--text3);font-size:11px;letter-spacing:0.3px;border-top:1px solid var(--border);}
+.footer span{color:var(--text2);}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .g3{grid-template-columns:1fr 1fr;}
+  .g3 .card:last-child{grid-column:span 2;}
+  .g4{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:780px){
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .g3 .card:last-child,.card.s2,.card.s3{grid-column:1;}
+  .container{padding:20px 16px 48px;}
+  .header{padding:0 16px;}
+  .logo-text p{display:none;}
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <h1>📊 AY26 Student Dashboard — East Region</h1>
-    <p id="last-updated">Fetching data...</p>
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">📊</div>
+    <div class="logo-text">
+      <h1>East Region · AY26 Dashboard</h1>
+      <p id="last-updated">Loading data…</p>
+    </div>
   </div>
   <div class="header-right">
-    <div class="status-dot"></div>
-    <span class="badge">AY26</span>
-    <span class="badge">East Region</span>
-    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+    <div class="live-dot"></div>
+    <span class="pill">AY 2025–26</span>
+    <span class="pill green" id="row-pill">—</span>
+    <button class="refresh-btn" onclick="loadData()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      Refresh
+    </button>
   </div>
-</div>
+</header>
 
 <div id="loading">
-  <div class="spinner"></div>
-  <p id="loading-msg">Fetching live data from Google Sheets...</p>
+  <div class="loader-ring"></div>
+  <p id="loading-msg">Fetching live data from Google Sheets…</p>
 </div>
 
 <div id="dashboard">
 <div class="container">
 
-  <div class="section-title">Summary Overview</div>
+  <div class="section-label"><span>Overview KPIs</span></div>
   <div class="kpi-grid" id="kpi-grid"></div>
 
-  <div class="section-title">Center-wise Admission Count</div>
-  <div class="table-card">
-    <div class="table-header">
-      <h3>Center Performance</h3>
-      <span id="center-total-label"></span>
+  <div class="section-label"><span>Registration Funnel &amp; Enrollment</span></div>
+  <div class="g2" style="margin-bottom:40px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Registration Funnel</div><span class="chip">AY26</span></div>
+      <div class="card-sub">Step-by-step from total students → batch allotted</div>
+      <div class="funnel" id="funnel"></div>
     </div>
-    <div style="overflow-x:auto">
-      <table id="center-table">
-        <thead>
-          <tr>
-            <th>Center</th>
-            <th>Total Students</th>
-            <th>Fresh Reg.</th>
-            <th>w/o Free Enroll</th>
-            <th>Free Enroll</th>
-            <th>Retained</th>
-            <th>Less than Reg.</th>
-            <th>Coverage</th>
-          </tr>
-        </thead>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Enrollment Status Distribution</div></div>
+      <div class="card-sub">All AY26 students by enrollment type</div>
+      <div class="cw h260"><canvas id="enrollChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Center-wise Performance</span></div>
+  <div class="card" style="padding:0;margin-bottom:40px">
+    <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div><div class="card-title">Center-wise Admission Summary</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px">All metrics computed per center using exact business rules</div></div>
+      <span class="chip" id="center-chip"></span>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th>Center</th><th>Total</th>
+          <th>Reg. w/ Free</th><th>Adm. w/ Free</th>
+          <th>Reg. w/o Free</th><th>Adm. w/o Free</th>
+          <th>Retained</th><th>Less than Reg.</th>
+          <th>Eligible</th><th>Batch Allotted</th>
+          <th>Fresh ARPU</th><th>Collection %</th>
+        </tr></thead>
         <tbody id="center-tbody"></tbody>
       </table>
     </div>
   </div>
 
-  <div class="section-title">Admission Trends</div>
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-title">Month-wise Admission Trend</div>
-      <div class="chart-sub">AY26 admissions by month (Apr → Mar)</div>
-      <div class="chart-wrap"><canvas id="monthChart"></canvas></div>
+  <div class="section-label"><span>ARPU Analysis</span></div>
+  <div class="g3" style="margin-bottom:40px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Fresh ARPU</div><span class="chip">paid only</span></div>
+      <div class="card-sub">Avg arpu · fresh (w/o free) · arpu_check = Yes</div>
+      <div class="cw h160"><canvas id="freshArpuChart"></canvas></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Day-wise Admission Trend</div>
-      <div class="chart-sub">Admissions by day of month</div>
-      <div class="chart-wrap"><canvas id="dayChart"></canvas></div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Blended ARPU</div><span class="chip">paid only</span></div>
+      <div class="card-sub">Avg arpu · fresh + retained (w/o free) · arpu_check = Yes</div>
+      <div class="cw h160"><canvas id="blendedArpuChart"></canvas></div>
     </div>
-  </div>
-
-  <div class="section-title">Course & Board Analysis</div>
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-title">Class-wise Admission</div>
-      <div class="chart-sub">Breakdown by class/course</div>
-      <div class="chart-wrap"><canvas id="classChart"></canvas></div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Class-wise Fresh ARPU</div></div>
+      <div class="card-sub">Fresh ARPU per class / course</div>
+      <div class="cw h160"><canvas id="arpuClassChart"></canvas></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Board-wise Admission</div>
-      <div class="chart-sub">Breakdown by board</div>
-      <div class="chart-wrap"><canvas id="boardChart"></canvas></div>
+    <div class="card s3">
+      <div class="card-head"><div class="card-title">Center-wise Fresh ARPU</div></div>
+      <div class="card-sub">Top centers — fresh paid ARPU (arpu_check = Yes)</div>
+      <div class="cw h220"><canvas id="arpuCenterChart"></canvas></div>
     </div>
   </div>
 
-  <div class="section-title">Fee Collection Analysis — Center-wise</div>
-  <div class="chart-card" style="margin-bottom:20px">
-    <div class="chart-title">Center-wise: Fees Amount vs Fees Paid</div>
-    <div class="chart-sub">Total course fee vs amount collected per center</div>
-    <div class="chart-wrap tall"><canvas id="feeChart"></canvas></div>
+  <div class="section-label"><span>Fee Collection</span></div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Billed vs Collected (Top 15)</div></div>
+      <div class="card-sub">Total fees billed vs amount collected per center</div>
+      <div class="cw h300"><canvas id="feeChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Collection Rate by Center</div></div>
+      <div class="card-sub">% of fees collected — green ≥ 80%, amber ≥ 50%, red &lt; 50%</div>
+      <div class="cw h300"><canvas id="feeRateChart"></canvas></div>
+    </div>
   </div>
-  <div class="table-card" style="margin-bottom:40px">
-    <div class="table-header"><h3>Fee Collection Detail</h3><span>AY26 Students</span></div>
-    <div style="overflow-x:auto">
+  <div class="card" style="padding:0;margin-bottom:40px">
+    <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div class="card-title">Fee Collection Detail</div><span class="chip">Center-wise</span>
+    </div>
+    <div class="tw">
       <table>
-        <thead>
-          <tr>
-            <th>Center</th>
-            <th>Students</th>
-            <th>Total Fees Amt</th>
-            <th>Fees Paid</th>
-            <th>Pending</th>
-            <th>Collection %</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Center</th><th>Students</th><th>Fees Billed</th><th>Fees Collected</th><th>Pending</th><th>Collection %</th></tr></thead>
         <tbody id="fee-tbody"></tbody>
       </table>
     </div>
   </div>
 
-  <div class="section-title">ARPU Report (arpu_check = Yes)</div>
-  <div class="charts-grid three" style="margin-bottom:20px">
-    <div class="chart-card">
-      <div class="chart-title">Overall ARPU</div>
-      <div class="chart-sub">Average revenue per unit</div>
-      <div class="chart-wrap short"><canvas id="arpuOverallChart"></canvas></div>
+  <div class="section-label"><span>Payment Stage Split</span></div>
+  <div class="pay-grid" id="payment-grid"></div>
+
+  <div class="section-label" style="margin-top:12px"><span>Admission Trends</span></div>
+  <div class="g2" style="margin-bottom:40px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Month-wise Admissions</div></div>
+      <div class="card-sub">AY26 admissions trend by month (Apr → Mar)</div>
+      <div class="cw h240"><canvas id="monthChart"></canvas></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Center-wise ARPU</div>
-      <div class="chart-sub">Top centers by ARPU</div>
-      <div class="chart-wrap short"><canvas id="arpuCenterChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Class-wise ARPU</div>
-      <div class="chart-sub">ARPU by course type</div>
-      <div class="chart-wrap short"><canvas id="arpuClassChart"></canvas></div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Day-of-month Trend</div></div>
+      <div class="card-sub">Admissions distributed by day number</div>
+      <div class="cw h240"><canvas id="dayChart"></canvas></div>
     </div>
   </div>
 
-  <div class="section-title">Eligibility vs Batch Allocation</div>
-  <div class="elig-grid" style="margin-bottom:40px">
-    <div class="chart-card">
-      <div class="chart-title">Eligibility Status</div>
-      <div class="chart-sub">Students eligible for batch allocation</div>
-      <div class="chart-wrap short"><canvas id="eligChart"></canvas></div>
+  <div class="section-label"><span>Course, Board &amp; Wing</span></div>
+  <div class="g3" style="margin-bottom:40px">
+    <div class="card">
+      <div class="card-title">Class / Course Split</div>
+      <div class="card-sub">Students by class or course type</div>
+      <div class="cw h220"><canvas id="classChart"></canvas></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Batch Allocation Status</div>
-      <div class="chart-sub">Eligible students — allocated vs not allocated</div>
-      <div class="chart-wrap short"><canvas id="batchChart"></canvas></div>
+    <div class="card">
+      <div class="card-title">Board-wise Split</div>
+      <div class="card-sub">Students by board affiliation</div>
+      <div class="cw h220"><canvas id="boardChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Wing Distribution</div>
+      <div class="card-sub">Senior Wing vs Foundation Wing</div>
+      <div class="cw h220"><canvas id="wingChart"></canvas></div>
     </div>
   </div>
 
-  <div class="section-title">Payment Check Split</div>
-  <div class="payment-grid" id="payment-grid"></div>
-
-  <div class="section-title">AY26 Enrollment Status Breakdown</div>
-  <div class="charts-grid" style="margin-bottom:40px">
-    <div class="chart-card">
-      <div class="chart-title">Enrollment Status Distribution</div>
-      <div class="chart-sub">Overall AY26 enrollment breakdown</div>
-      <div class="chart-wrap"><canvas id="enrollChart"></canvas></div>
+  <div class="section-label"><span>Eligibility &amp; Batch Allocation</span></div>
+  <div class="g2" style="margin-bottom:48px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Eligibility Status</div></div>
+      <div class="card-sub">Among fresh registrations — eligible vs not eligible for batch</div>
+      <div class="cw h220"><canvas id="eligChart"></canvas></div>
+      <div class="stat-row" id="elig-stats"></div>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Wing-wise Distribution</div>
-      <div class="chart-sub">Senior Wing vs Foundation</div>
-      <div class="chart-wrap"><canvas id="wingChart"></canvas></div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Batch Allocation Status</div></div>
+      <div class="card-sub">Among eligible students — allotted vs pending allocation</div>
+      <div class="cw h220"><canvas id="batchChart"></canvas></div>
+      <div class="stat-row" id="batch-stats"></div>
     </div>
   </div>
 
 </div>
 <div class="footer">
-  AY26 Student Report — East Region &nbsp;|&nbsp; Live from Google Sheets via Apps Script &nbsp;|&nbsp;
-  <span id="footer-time"></span>
+  AY26 East Region Dashboard &nbsp;·&nbsp; Live via Google Apps Script &nbsp;·&nbsp; <span id="footer-time">—</span>
 </div>
 </div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-// ✅ Using Apps Script JSON endpoint (no CORS issues)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXgTqB73GbVG20zc3aWOmTj0kobuJXEt92jA0EeCJ4nNG1TPW0o86kWbKdIepgrECZ/exec';
+const APPS_URL='https://script.google.com/macros/s/AKfycbzXgTqB73GbVG20zc3aWOmTj0kobuJXEt92jA0EeCJ4nNG1TPW0o86kWbKdIepgrECZ/exec';
+const MONTHS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const C=['#3b82f6','#8b5cf6','#10b981','#f59e0b','#06b6d4','#ec4899','#f97316','#6366f1','#14b8a6','#a855f7','#22d3ee','#84cc16','#fb923c','#4ade80','#818cf8','#f472b6','#2dd4bf','#facc15','#c084fc','#60a5fa'];
+let CH={};
 
-const MONTH_ORDER = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const fmt =(n)=>isNaN(n)?'—':Math.round(n).toLocaleString('en-IN');
+const fmtC=(n)=>'₹'+fmt(n);
+const fmtK=(n)=>n>=1e7?'₹'+(n/1e7).toFixed(2)+'Cr':n>=1e5?'₹'+(n/1e5).toFixed(1)+'L':fmtC(n);
+const avg =(a)=>a.length?a.reduce((s,v)=>s+v,0)/a.length:0;
+const pct =(a,b)=>b?((a/b)*100).toFixed(1):'0.0';
+const pctN=(a,b)=>b?+((a/b)*100).toFixed(1):0;
 
-const COLORS = [
-  '#3b82f6','#06b6d4','#8b5cf6','#10b981',
-  '#f59e0b','#ef4444','#ec4899','#14b8a6',
-  '#f97316','#6366f1','#84cc16','#a855f7',
-  '#22d3ee','#fb923c','#4ade80','#818cf8',
-  '#f472b6','#2dd4bf','#facc15','#c084fc','#60a5fa'
-];
+function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
+function mc(id,cfg){dc(id);const el=document.getElementById(id);if(!el)return;CH[id]=new Chart(el.getContext('2d'),cfg);}
 
-let charts = {};
+const DEF={responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{labels:{color:'#64748b',font:{size:11,family:'Inter'},boxWidth:10,padding:14}}}};
+const SC=()=>({
+  x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'}},
+  y:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'}}
+});
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-const fmt  = n => Math.round(n).toLocaleString('en-IN');
-const fmtC = n => '₹' + Math.round(n).toLocaleString('en-IN');
-const avg  = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-const pct  = (a,b) => b ? ((a/b)*100).toFixed(1) : '0.0';
-
-function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
-
-function makeChart(id, config) {
-  destroyChart(id);
-  const el = document.getElementById(id);
-  if (!el) return;
-  charts[id] = new Chart(el.getContext('2d'), config);
-}
-
-const CHART_DEFAULTS = {
-  responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } }
-};
-
-function darkScales() {
-  return {
-    x: { ticks: { color: '#64748b', font:{size:10} }, grid: { color: 'rgba(30,45,69,0.5)' } },
-    y: { ticks: { color: '#64748b', font:{size:10} }, grid: { color: 'rgba(30,45,69,0.5)' } }
-  };
-}
-
-// ─── FETCH DATA ────────────────────────────────────────────────────────────────
-async function loadData() {
-  document.getElementById('loading').style.display = 'flex';
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('loading-msg').textContent = 'Fetching live data from Google Sheets...';
-
+async function loadData(){
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('dashboard').style.display='none';
   let rows;
-  try {
-    // Apps Script returns JSON — just fetch it directly
-    const res = await fetch(APPS_SCRIPT_URL, { redirect: 'follow' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-
-    // Apps Script sometimes wraps in /**/ for JSONP — strip if needed
-    const clean = text.replace(/^\/\*\*\/[^(]*\(/, '').replace(/\);?\s*$/, '').trim();
-    rows = JSON.parse(clean.startsWith('[') ? clean : text);
-
-    if (!Array.isArray(rows)) throw new Error('Unexpected response format');
-  } catch(e) {
-    document.getElementById('loading').innerHTML = `
-      <div style="text-align:center">
-        <div style="font-size:40px;margin-bottom:16px">⚠️</div>
-        <div class="error-box" style="max-width:520px;margin:0 auto;text-align:left">
-          <strong>Could not load data</strong><br><br>
-          Error: ${e.message}<br><br>
-          <strong>Things to check:</strong><br>
-          1. Apps Script is deployed as <em>"Execute as: Me"</em> and <em>"Who has access: Anyone"</em><br>
-          2. You have re-deployed after any code changes (Deploy → Manage deployments → ✏️ Edit → New version)<br>
-          3. The sheet has data with an <code>acad_year</code> column containing <code>AY26</code>
-        </div>
-        <button onclick="loadData()" style="margin-top:20px;background:#3b82f6;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">↻ Retry</button>
-      </div>`;
+  try{
+    const res=await fetch(APPS_URL,{redirect:'follow'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const txt=await res.text();
+    const clean=txt.replace(/^\/\*\*\/[^(]*\(/,'').replace(/\);?\s*$/,'').trim();
+    rows=JSON.parse(clean.startsWith('[')?clean:txt);
+    if(!Array.isArray(rows)) throw new Error('Not an array');
+  }catch(e){
+    document.getElementById('loading').innerHTML=`<div style="text-align:center"><div style="font-size:40px;margin-bottom:16px">⚠️</div><div class="err" style="max-width:520px;margin:0 auto;text-align:left"><strong>Could not load data</strong><br><br>${e.message}<br><br>Ensure Apps Script is deployed: Execute as Me · Who has access: Anyone</div><button onclick="loadData()" style="margin-top:20px;background:#3b82f6;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">↻ Retry</button></div>`;
     return;
   }
-
-  buildDashboard(rows);
+  build(rows);
 }
 
-// ─── BUILD DASHBOARD ──────────────────────────────────────────────────────────
-function buildDashboard(rows) {
-  // Normalise keys to lowercase with underscores
-  const norm = rows.map(r => {
-    const o = {};
-    Object.keys(r).forEach(k => { o[k.trim().toLowerCase().replace(/\s+/g,'_')] = String(r[k]||'').trim(); });
-    return o;
-  });
-
-  const ay26 = norm.filter(r => r.acad_year === 'AY26');
-
-  if (ay26.length === 0) {
-    document.getElementById('loading').innerHTML = `
-      <div style="text-align:center">
-        <div style="font-size:40px;margin-bottom:16px">🔍</div>
-        <div class="error-box" style="max-width:480px;margin:0 auto;text-align:left">
-          <strong>No AY26 data found</strong><br><br>
-          Data was fetched (${norm.length} total rows) but none matched <code>acad_year = AY26</code>.<br><br>
-          Column names detected: <code>${Object.keys(norm[0]||{}).join(', ')}</code>
-        </div>
-        <button onclick="loadData()" style="margin-top:20px;background:#3b82f6;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">↻ Retry</button>
-      </div>`;
+function build(rows){
+  const norm=rows.map(r=>{const o={};Object.keys(r).forEach(k=>{o[k.trim().toLowerCase().replace(/\s+/g,'_')]=String(r[k]||'').trim();});return o;});
+  const all=norm.filter(r=>r.acad_year==='AY26');
+  if(!all.length){
+    document.getElementById('loading').innerHTML=`<div class="err" style="max-width:480px;margin:40px auto">No AY26 rows. Columns found: ${Object.keys(norm[0]||{}).join(', ')}</div>`;
     return;
   }
 
-  // ════════════════════════════════════════════════════════
-  // BUSINESS LOGIC — single source of truth
-  // ════════════════════════════════════════════════════════
+  // ── BUSINESS LOGIC ─────────────────────────────────────────────────────────
+  // Helpers
+  const isFresh  =r=>['Admission','Registration Only'].includes(r.ay26_enrollment_status);
+  const isAdm    =r=>r.ay26_enrollment_status==='Admission';
+  const isPaid   =r=>r.free_admission.toUpperCase()==='FALSE';
+  const isRet    =r=>r.ay26_enrollment_status==='Retained';
+  const isLTR    =r=>r.ay26_enrollment_status==='Less than Registration';
+  const isArpu   =r=>r.arpu_check.toLowerCase()==='yes';
+  const arpuVal  =r=>parseFloat(r.arpu||0);
 
-  // ── REGISTRATION / ENROLLMENT ──
-  // Fresh registration = ay26_enrollment_status IN ('Admission', 'Registration Only')
-  const isFresh  = r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status);
-  // Free enrollment  = fresh AND free_admission = TRUE
-  const isFree   = r => isFresh(r) && r.free_admission.toUpperCase() === 'TRUE';
-  // Paid enrollment  = fresh AND free_admission = FALSE
-  const isPaid   = r => isFresh(r) && r.free_admission.toUpperCase() === 'FALSE';
-  // Retained
-  const isRetained = r => r.ay26_enrollment_status === 'Retained';
-  // Less than Registration
-  const isLTR    = r => r.ay26_enrollment_status === 'Less than Registration';
+  // Segments (exact per spec)
+  const regWF   =all.filter(isFresh);                                     // Total Reg w/ free
+  const admWF   =all.filter(isAdm);                                       // Total Adm w/ free
+  const regWoF  =all.filter(r=>isFresh(r)&&isPaid(r));                    // Total Reg w/o free
+  const admWoF  =all.filter(r=>isAdm(r)&&isPaid(r));                      // Total Adm w/o free
+  const eligible=all.filter(r=>isFresh(r)&&r.eligibility_status==='Eligible'); // Eligible
+  const notElig =all.filter(r=>isFresh(r)&&r.eligibility_status!=='Eligible');
+  const isAllot =r=>isFresh(r)&&r.eligibility_status==='Eligible'&&r.batch&&r.batch.trim()!==''&&r.batch.trim().toLowerCase()!=='no batch';
+  const batAllot=all.filter(isAllot);                                      // Batch allotted
+  const batPend =eligible.filter(r=>!isAllot(r));
+  const retained=all.filter(isRet);
+  const ltrAll  =all.filter(isLTR);
 
-  const fresh      = ay26.filter(isFresh);
-  const freeEnroll = ay26.filter(isFree);
-  const paidEnroll = ay26.filter(isPaid);
-  const retained   = ay26.filter(isRetained);
-  const ltrAll     = ay26.filter(isLTR);
+  // Fresh ARPU: avg(arpu) | arpu_check=Yes & fresh & paid
+  const fArpuV=all.filter(r=>isArpu(r)&&isFresh(r)&&isPaid(r)).map(arpuVal).filter(v=>v>0);
+  const freshArpu=avg(fArpuV);
 
-  // ── ARPU ──
-  // ARPU = average of `arpu` column WHERE arpu_check = 'Yes'
-  const arpu_rows = ay26.filter(r => r.arpu_check.toLowerCase() === 'yes');
-  const arpu_vals = arpu_rows.map(r => parseFloat(r.arpu||0)).filter(v => !isNaN(v) && v > 0);
-  const overallArpu = avg(arpu_vals);
+  // Blended ARPU: avg(arpu) | arpu_check=Yes & (fresh|retained) & paid
+  const bArpuV=all.filter(r=>isArpu(r)&&(isFresh(r)||isRet(r))&&isPaid(r)).map(arpuVal).filter(v=>v>0);
+  const blendArpu=avg(bArpuV);
 
-  // ── FEES ──
-  const totalFees = ay26.reduce((s,r) => s + (parseFloat(r.fees_amt)||0), 0);
-  const totalPaid = ay26.reduce((s,r) => s + (parseFloat(r.fees_paid)||0), 0);
+  // Collection % = sum(fees_paid) / sum(fees_amt)
+  const totBill=all.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
+  const totColl=all.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
+  const collPct=pctN(totColl,totBill);
 
-  // ── ELIGIBILITY ──
-  // eligible_for_batch = eligibility_status === 'Eligible'
-  const eligible    = ay26.filter(r => r.eligibility_status === 'Eligible');
-  const notEligible = ay26.filter(r => r.eligibility_status !== 'Eligible');
+  // Payment split
+  const PL=['1st EMI Paid','2nd EMI Paid','3rd EMI Paid','Total Paid','Token Only','Paid btw Token & 1st EMI','Less than Token'];
+  const PC=['#10b981','#3b82f6','#8b5cf6','#22d3ee','#f59e0b','#f97316','#ef4444'];
+  const pCnt={};PL.forEach(p=>pCnt[p]=0);
+  all.forEach(r=>{if(r.newpayment_checks&&pCnt.hasOwnProperty(r.newpayment_checks))pCnt[r.newpayment_checks]++;});
 
-  // ── BATCH ALLOCATION ──
-  // Among eligible students:
-  //   NOT allocated = batch === 'No Batch' (or empty)
-  //   Allocated     = batch contains a real code (e.g. 14-LN101EA) — anything that is NOT 'No Batch' and not blank
-  const isBatchAllocated   = r => r.batch && r.batch.trim() !== '' && r.batch.trim().toLowerCase() !== 'no batch';
-  const isBatchNotAllocated = r => !r.batch || r.batch.trim() === '' || r.batch.trim().toLowerCase() === 'no batch';
+  // Centers
+  const cMap={};
+  all.forEach(r=>{const c=r.center||'Unknown';if(!cMap[c])cMap[c]=[];cMap[c].push(r);});
+  const centers=Object.entries(cMap).sort((a,b)=>b[1].length-a[1].length);
 
-  const allocated    = eligible.filter(isBatchAllocated);
-  const notAllocated = eligible.filter(isBatchNotAllocated);
-
-  // ── PAYMENT CHECKS ──
-  // Exact labels from newpayment_checks column
-  const PAY_LABELS = [
-    '1st EMI Paid',
-    '2nd EMI Paid',
-    '3rd EMI Paid',
-    'Total Paid',
-    'Token Only',
-    'Paid btw Token & 1st EMI',
-    'Less than Token'
+  // ── KPI CARDS ──────────────────────────────────────────────────────────────
+  const kpis=[
+    {c:'blue',   ic:'👥',lbl:'Total AY26 Students',      val:fmt(all.length),           sub:`${centers.length} active centers`},
+    {c:'green',  ic:'📋',lbl:'Total Reg. w/ Free',       val:fmt(regWF.length),          sub:'fresh (Admission + Reg. Only)'},
+    {c:'teal',   ic:'🎟️',lbl:'Total Adm. w/ Free',      val:fmt(admWF.length),          sub:'ay26_status = Admission only'},
+    {c:'purple', ic:'💳',lbl:'Total Reg. w/o Free',      val:fmt(regWoF.length),         sub:'fresh & free_admission = FALSE'},
+    {c:'indigo', ic:'🎓',lbl:'Total Adm. w/o Free',      val:fmt(admWoF.length),         sub:'Admission & free_admission = FALSE'},
+    {c:'green',  ic:'✅',lbl:'Eligible for Batch',       val:fmt(eligible.length),       sub:`${pct(eligible.length,regWF.length)}% of fresh registrations`},
+    {c:'blue',   ic:'🗂️',lbl:'Batch Allotted',           val:fmt(batAllot.length),       sub:`${pct(batAllot.length,eligible.length)}% of eligible`},
+    {c:'orange', ic:'📈',lbl:'Fresh ARPU',               val:'₹'+fmt(freshArpu),         sub:`${fmt(fArpuV.length)} students · paid only`},
+    {c:'pink',   ic:'🔄',lbl:'Blended ARPU',             val:'₹'+fmt(blendArpu),         sub:`Fresh + Retained · paid only`},
+    {c:'rose',   ic:'💰',lbl:'Fee Collection %',         val:collPct.toFixed(1)+'%',     sub:`${fmtK(totColl)} of ${fmtK(totBill)}`},
+    {c:'teal',   ic:'🔁',lbl:'Retained',                 val:fmt(retained.length),       sub:`${pct(retained.length,all.length)}% of total`},
+    {c:'orange', ic:'⬇️',lbl:'Less than Registration',  val:fmt(ltrAll.length),         sub:'Downgraded enrollment status'},
   ];
-  const PAY_COLORS = ['#10b981','#3b82f6','#8b5cf6','#22d3ee','#f59e0b','#f97316','#ef4444'];
+  document.getElementById('kpi-grid').innerHTML=kpis.map(k=>`
+    <div class="kpi-card" data-c="${k.c}">
+      <span class="kpi-icon">${k.ic}</span>
+      <div class="kpi-label">${k.lbl}</div>
+      <div class="kpi-value">${k.val}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
 
-  const payCount = {};
-  PAY_LABELS.forEach(p => payCount[p] = 0);
-  ay26.forEach(r => {
-    const v = r.newpayment_checks;
-    if (v && payCount.hasOwnProperty(v)) payCount[v]++;
-  });
+  // ── FUNNEL ─────────────────────────────────────────────────────────────────
+  const fSteps=[
+    {lbl:'Total AY26 Students', n:all.length,        col:'#3b82f6'},
+    {lbl:'Fresh Reg. (w/ free)',n:regWF.length,       col:'#8b5cf6'},
+    {lbl:'Fresh Reg. (w/o free)',n:regWoF.length,     col:'#06b6d4'},
+    {lbl:'Eligible for Batch',  n:eligible.length,    col:'#10b981'},
+    {lbl:'Batch Allotted',      n:batAllot.length,    col:'#f59e0b'},
+  ];
+  const fMax=fSteps[0].n;
+  document.getElementById('funnel').innerHTML=fSteps.map(s=>`
+    <div class="f-row">
+      <div class="f-lbl">${s.lbl}</div>
+      <div class="f-bw">
+        <div class="f-bf" style="width:${pct(s.n,fMax)}%;background:${s.col}25;border-left:3px solid ${s.col}">
+          <span style="color:${s.col};font-size:10px">${pct(s.n,fMax)}%</span>
+        </div>
+      </div>
+      <div class="f-num">${fmt(s.n)}</div>
+    </div>`).join('');
 
-  // ════════════════════════════════════════════════════════
-  // KPI CARDS
-  // ════════════════════════════════════════════════════════
-  document.getElementById('kpi-grid').innerHTML = `
-    <div class="kpi-card blue">
-      <div class="kpi-label">Total AY26 Students</div>
-      <div class="kpi-value">${fmt(ay26.length)}</div>
-      <div class="kpi-sub">All enrolled students</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-label">Fresh Registrations</div>
-      <div class="kpi-value">${fmt(fresh.length)}</div>
-      <div class="kpi-sub">Admission + Registration Only</div>
-    </div>
-    <div class="kpi-card purple">
-      <div class="kpi-label">Admission w/o Free Enroll</div>
-      <div class="kpi-value">${fmt(paidEnroll.length)}</div>
-      <div class="kpi-sub">Fresh & free_admission = FALSE</div>
-    </div>
-    <div class="kpi-card teal">
-      <div class="kpi-label">Free Enrollments</div>
-      <div class="kpi-value">${fmt(freeEnroll.length)}</div>
-      <div class="kpi-sub">Fresh & free_admission = TRUE</div>
-    </div>
-    <div class="kpi-card orange">
-      <div class="kpi-label">Overall ARPU</div>
-      <div class="kpi-value">₹${Math.round(overallArpu/1000)}K</div>
-      <div class="kpi-sub">Avg of arpu col (arpu_check=Yes) · ${fmt(arpu_vals.length)} students</div>
-    </div>
-    <div class="kpi-card pink">
-      <div class="kpi-label">Fee Collection %</div>
-      <div class="kpi-value">${pct(totalPaid, totalFees)}%</div>
-      <div class="kpi-sub">${fmtC(totalPaid)} collected of ${fmtC(totalFees)}</div>
-    </div>
-    <div class="kpi-card blue">
-      <div class="kpi-label">Eligible for Batch</div>
-      <div class="kpi-value">${fmt(eligible.length)}</div>
-      <div class="kpi-sub">eligibility_status = Eligible · ${pct(eligible.length, ay26.length)}% of total</div>
-    </div>
-    <div class="kpi-card green">
-      <div class="kpi-label">Batch Allocated</div>
-      <div class="kpi-value">${fmt(allocated.length)}</div>
-      <div class="kpi-sub">Of ${fmt(eligible.length)} eligible · ${pct(allocated.length, eligible.length)}% allocated</div>
-    </div>
-  `;
-
-  // ════════════════════════════════════════════════════════
-  // CENTER TABLE
-  // ════════════════════════════════════════════════════════
-  const centerMap = {};
-  ay26.forEach(r => {
-    const c = r.center || 'Unknown';
-    if (!centerMap[c]) centerMap[c] = [];
-    centerMap[c].push(r);
-  });
-  const centers = Object.entries(centerMap).sort((a,b) => b[1].length - a[1].length);
-  document.getElementById('center-total-label').textContent = `${centers.length} Centers`;
-
-  document.getElementById('center-tbody').innerHTML = centers.map(([c, rs]) => {
-    const fr  = rs.filter(isFresh);
-    const wo  = rs.filter(isPaid);
-    const fe  = rs.filter(isFree);
-    const ret = rs.filter(isRetained);
-    const ltr = rs.filter(isLTR);
-    const share = ((rs.length / ay26.length) * 100).toFixed(1);
-    const shortName = c.replace(/Vidyapeeth|Tuition\s*Center/gi,'').trim() || c;
-    const typeLabel = /vidyapeeth/i.test(c) ? 'Vidyapeeth' : 'Tuition Center';
+  // ── CENTER TABLE ───────────────────────────────────────────────────────────
+  document.getElementById('center-chip').textContent=`${centers.length} Centers`;
+  document.getElementById('center-tbody').innerHTML=centers.map(([c,rs])=>{
+    const rWF =rs.filter(isFresh).length;
+    const aWF =rs.filter(isAdm).length;
+    const rWoF=rs.filter(r=>isFresh(r)&&isPaid(r)).length;
+    const aWoF=rs.filter(r=>isAdm(r)&&isPaid(r)).length;
+    const ret =rs.filter(isRet).length;
+    const ltr =rs.filter(isLTR).length;
+    const elg =rs.filter(r=>isFresh(r)&&r.eligibility_status==='Eligible').length;
+    const bat =rs.filter(r=>isFresh(r)&&r.eligibility_status==='Eligible'&&r.batch&&r.batch.trim()!==''&&r.batch.trim().toLowerCase()!=='no batch').length;
+    const fAV =rs.filter(r=>isArpu(r)&&isFresh(r)&&isPaid(r)).map(arpuVal).filter(v=>v>0);
+    const fA  =avg(fAV);
+    const tF  =rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
+    const tP  =rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
+    const cp  =pctN(tP,tF);
+    const sn  =c.replace(/vidyapeeth|tuition\s*center/gi,'').trim()||c;
     return `<tr>
-      <td><strong>${shortName}</strong><div style="font-size:10px;color:var(--muted)">${typeLabel}</div></td>
-      <td><span class="num">${fmt(rs.length)}</span></td>
-      <td><span class="num">${fmt(fr.length)}</span></td>
-      <td><span class="tag tag-blue">${fmt(wo.length)}</span></td>
-      <td><span class="tag tag-green">${fmt(fe.length)}</span></td>
-      <td><span class="tag tag-purple">${fmt(ret.length)}</span></td>
-      <td><span class="tag tag-orange">${fmt(ltr.length)}</span></td>
-      <td>
-        <div style="font-size:11px;color:var(--muted)">${share}%</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${share}%"></div></div>
-      </td>
+      <td><strong style="font-size:12px">${sn}</strong></td>
+      <td class="tc"><strong>${fmt(rs.length)}</strong></td>
+      <td class="tc">${fmt(rWF)}</td>
+      <td class="tc">${fmt(aWF)}</td>
+      <td class="tc"><span class="tag tag-blue">${fmt(rWoF)}</span></td>
+      <td class="tc"><span class="tag tag-teal">${fmt(aWoF)}</span></td>
+      <td class="tc"><span class="tag tag-purple">${fmt(ret)}</span></td>
+      <td class="tc"><span class="tag tag-orange">${fmt(ltr)}</span></td>
+      <td class="tc"><span class="tag tag-green">${fmt(elg)}</span></td>
+      <td class="tc"><span class="tag tag-blue">${fmt(bat)}</span><div style="font-size:9.5px;color:var(--text3);margin-top:2px">${elg?pct(bat,elg)+'%':''}</div></td>
+      <td class="tc" style="color:#fbbf24;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">${fA>0?'₹'+fmt(fA):'—'}</td>
+      <td class="tc"><span class="tag ${cp>=80?'tag-green':cp>=50?'tag-orange':'tag-red'}">${cp.toFixed(1)}%</span></td>
     </tr>`;
   }).join('');
 
-  // ── MONTH CHART ──
-  const monthCount = {};
-  ay26.forEach(r => { if(r.month) monthCount[r.month] = (monthCount[r.month]||0)+1; });
-  const monthLabels = MONTH_ORDER.filter(m => monthCount[m]);
-  const monthData   = monthLabels.map(m => monthCount[m]);
-  makeChart('monthChart', {
-    type: 'bar',
-    data: {
-      labels: monthLabels,
-      datasets: [{ label: 'Admissions', data: monthData,
-        backgroundColor: monthData.map((_,i)=>COLORS[i%COLORS.length]+'cc'),
-        borderColor: monthData.map((_,i)=>COLORS[i%COLORS.length]),
-        borderWidth:1, borderRadius:6 }]
-    },
-    options: { ...CHART_DEFAULTS, scales: darkScales(),
-      plugins: { ...CHART_DEFAULTS.plugins, legend:{display:false} } }
-  });
+  // ── ARPU CHARTS ────────────────────────────────────────────────────────────
+  const arpuOpts=(label,color)=>({...DEF,indexAxis:'y',
+    plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}},
+    scales:SC()});
 
-  // ── DAY CHART ──
-  const dayCount = {};
-  ay26.forEach(r => { if(r.day) { const d=parseInt(r.day); if(!isNaN(d)) dayCount[d]=(dayCount[d]||0)+1; }});
-  const dayLabels = Object.keys(dayCount).map(Number).sort((a,b)=>a-b);
-  makeChart('dayChart', {
-    type: 'line',
-    data: {
-      labels: dayLabels,
-      datasets: [{ label:'Admissions', data: dayLabels.map(d=>dayCount[d]),
-        borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.1)',
-        fill:true, tension:0.4, pointRadius:3, pointBackgroundColor:'#3b82f6' }]
-    },
-    options: { ...CHART_DEFAULTS, scales: darkScales(),
-      plugins: { ...CHART_DEFAULTS.plugins, legend:{display:false} } }
-  });
+  mc('freshArpuChart',{type:'bar',
+    data:{labels:['Fresh ARPU'],datasets:[{data:[Math.round(freshArpu)],backgroundColor:['rgba(139,92,246,0.75)'],borderRadius:10,borderSkipped:false}]},
+    options:arpuOpts()});
 
-  // ── CLASS CHART ──
-  const classCount = {};
-  ay26.forEach(r => { if(r.class_course) classCount[r.class_course]=(classCount[r.class_course]||0)+1; });
-  const classEntries = Object.entries(classCount).sort((a,b)=>b[1]-a[1]);
-  makeChart('classChart', {
-    type: 'doughnut',
-    data: { labels: classEntries.map(([k])=>k),
-      datasets:[{ data:classEntries.map(([,v])=>v), backgroundColor:COLORS, borderWidth:0 }] },
-    options: { ...CHART_DEFAULTS, cutout:'60%',
-      plugins:{ legend:{ position:'right', labels:{color:'#94a3b8',font:{size:10},boxWidth:12} } } }
-  });
+  mc('blendedArpuChart',{type:'bar',
+    data:{labels:['Blended ARPU'],datasets:[{data:[Math.round(blendArpu)],backgroundColor:['rgba(6,182,212,0.75)'],borderRadius:10,borderSkipped:false}]},
+    options:arpuOpts()});
 
-  // ── BOARD CHART ──
-  const boardCount = {};
-  ay26.forEach(r => { const b=r.board_name||'Unknown'; boardCount[b]=(boardCount[b]||0)+1; });
-  const boardEntries = Object.entries(boardCount).filter(([k])=>k).sort((a,b)=>b[1]-a[1]);
-  makeChart('boardChart', {
-    type: 'doughnut',
-    data: { labels: boardEntries.map(([k])=>k),
-      datasets:[{ data:boardEntries.map(([,v])=>v), backgroundColor:[COLORS[3],COLORS[0],COLORS[2],COLORS[4],COLORS[6]], borderWidth:0 }] },
-    options: { ...CHART_DEFAULTS, cutout:'60%',
-      plugins:{ legend:{ position:'right', labels:{color:'#94a3b8',font:{size:10},boxWidth:12} } } }
-  });
+  // Center ARPU
+  const cA=centers.map(([c,rs])=>{
+    const v=rs.filter(r=>isArpu(r)&&isFresh(r)&&isPaid(r)).map(arpuVal).filter(v=>v>0);
+    return{lbl:c.replace(/vidyapeeth|tuition\s*center/gi,'').trim().substring(0,20),a:avg(v)};
+  }).filter(d=>d.a>0).sort((a,b)=>b.a-a.a).slice(0,12);
+  mc('arpuCenterChart',{type:'bar',
+    data:{labels:cA.map(d=>d.lbl),datasets:[{data:cA.map(d=>Math.round(d.a)),backgroundColor:C.map(x=>x+'bb'),borderRadius:4}]},
+    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}}}});
 
-  // ── FEE CHART ──
-  const feeData = centers.slice(0,15).map(([c,rs])=>{
-    const tF = rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-    const tP = rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    return { label: c.replace(/- |Vidyapeeth|Tuition Center/g,'').trim().substring(0,20), fees:tF, paid:tP };
-  });
-  makeChart('feeChart', {
-    type:'bar',
-    data:{ labels:feeData.map(d=>d.label),
-      datasets:[
-        { label:'Total Fees Amt', data:feeData.map(d=>Math.round(d.fees)), backgroundColor:'rgba(99,102,241,0.7)', borderRadius:4 },
-        { label:'Fees Paid',      data:feeData.map(d=>Math.round(d.paid)), backgroundColor:'rgba(16,185,129,0.7)', borderRadius:4 }
-      ]},
-    options:{ ...CHART_DEFAULTS, scales:darkScales(),
-      plugins:{ legend:{ labels:{color:'#94a3b8',font:{size:11}} } } }
-  });
+  // Class ARPU
+  const clA={};
+  all.forEach(r=>{if(isArpu(r)&&isFresh(r)&&isPaid(r)){const cl=r.class_course||'Other';if(!clA[cl])clA[cl]=[];const v=arpuVal(r);if(v>0)clA[cl].push(v);}});
+  const clAE=Object.entries(clA).map(([k,v])=>({k,a:avg(v)})).sort((a,b)=>b.a-a.a);
+  mc('arpuClassChart',{type:'bar',
+    data:{labels:clAE.map(d=>d.k),datasets:[{data:clAE.map(d=>Math.round(d.a)),backgroundColor:C.map(x=>x+'bb'),borderRadius:4}]},
+    options:{...DEF,indexAxis:'y',scales:SC(),plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}}}});
 
-  // ── FEE TABLE ──
-  document.getElementById('fee-tbody').innerHTML = centers.map(([c,rs])=>{
+  // ── FEE CHARTS ─────────────────────────────────────────────────────────────
+  const fD=centers.slice(0,15).map(([c,rs])=>{
     const tF=rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
     const tP=rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    const pending=tF-tP; const cp=pct(tP,tF); const cpN=parseFloat(cp);
-    const tagClass = cpN>=80?'tag-green':cpN>=50?'tag-orange':'tag-red';
-    return `<tr><td>${c}</td><td>${fmt(rs.length)}</td><td>${fmtC(tF)}</td><td>${fmtC(tP)}</td>
-      <td style="color:${pending>0?'#f87171':'#34d399'}">${fmtC(pending)}</td>
-      <td><span class="tag ${tagClass}">${cp}%</span></td></tr>`;
+    return{lbl:c.replace(/vidyapeeth|tuition\s*center/gi,'').trim().substring(0,18),fees:tF,paid:tP,cp:pctN(tP,tF)};
+  });
+  mc('feeChart',{type:'bar',
+    data:{labels:fD.map(d=>d.lbl),datasets:[
+      {label:'Billed',data:fD.map(d=>Math.round(d.fees)),backgroundColor:'rgba(99,102,241,0.6)',borderRadius:4},
+      {label:'Collected',data:fD.map(d=>Math.round(d.paid)),backgroundColor:'rgba(16,185,129,0.6)',borderRadius:4}]},
+    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}}}});
+
+  mc('feeRateChart',{type:'bar',
+    data:{labels:fD.map(d=>d.lbl),datasets:[{label:'Collection %',data:fD.map(d=>d.cp),
+      backgroundColor:fD.map(d=>d.cp>=80?'rgba(16,185,129,0.7)':d.cp>=50?'rgba(245,158,11,0.7)':'rgba(239,68,68,0.7)'),borderRadius:4}]},
+    options:{...DEF,scales:{...SC(),y:{...SC().y,max:100,ticks:{...SC().y.ticks,callback:v=>v+'%'}}},
+      plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)}%`}}}}});
+
+  document.getElementById('fee-tbody').innerHTML=centers.map(([c,rs])=>{
+    const tF=rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
+    const tP=rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
+    const pend=tF-tP; const cp=pctN(tP,tF);
+    return`<tr><td>${c}</td><td class="tc">${fmt(rs.length)}</td><td>${fmtC(tF)}</td><td>${fmtC(tP)}</td>
+      <td style="color:${pend>0?'#f87171':'#34d399'}">${fmtC(pend)}</td>
+      <td><span class="tag ${cp>=80?'tag-green':cp>=50?'tag-orange':'tag-red'}">${cp.toFixed(1)}%</span></td></tr>`;
   }).join('');
 
-  // ── ARPU CHARTS ──
-  // Overall ARPU — single value bar
-  makeChart('arpuOverallChart', {
-    type:'bar',
-    data:{ labels:['Overall ARPU (arpu_check=Yes)'],
-      datasets:[{ data:[Math.round(overallArpu)], backgroundColor:['rgba(139,92,246,0.8)'], borderRadius:8, borderSkipped:false }] },
-    options:{ ...CHART_DEFAULTS, indexAxis:'y',
-      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
-      scales:darkScales() }
-  });
-
-  // Center-wise ARPU — avg of arpu where arpu_check=Yes, per center
-  const centerArpu = centers.map(([c,rs])=>{
-    const aV = rs.filter(r => r.arpu_check.toLowerCase() === 'yes')
-                 .map(r => parseFloat(r.arpu||0)).filter(v=>!isNaN(v)&&v>0);
-    return { label: c.replace(/- |Vidyapeeth|Tuition\s*Center/gi,'').trim().substring(0,18), arpu: avg(aV) };
-  }).filter(d=>d.arpu>0).sort((a,b)=>b.arpu-a.arpu).slice(0,10);
-  makeChart('arpuCenterChart', {
-    type:'bar',
-    data:{ labels:centerArpu.map(d=>d.label),
-      datasets:[{ data:centerArpu.map(d=>Math.round(d.arpu)), backgroundColor:COLORS.map(c=>c+'cc'), borderRadius:4 }] },
-    options:{ ...CHART_DEFAULTS, indexAxis:'y',
-      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
-      scales:darkScales() }
-  });
-
-  // Class-wise ARPU — avg of arpu where arpu_check=Yes, per class_course
-  const classArpuMap = {};
-  ay26.forEach(r => {
-    if(r.arpu_check.toLowerCase() === 'yes'){
-      const cl = r.class_course || 'Unknown';
-      if(!classArpuMap[cl]) classArpuMap[cl] = [];
-      const v = parseFloat(r.arpu||0);
-      if(!isNaN(v) && v>0) classArpuMap[cl].push(v);
-    }
-  });
-  const classArpuE = Object.entries(classArpuMap)
-    .map(([k,v])=>({label:k, arpu:avg(v)}))
-    .sort((a,b)=>b.arpu-a.arpu);
-  makeChart('arpuClassChart', {
-    type:'bar',
-    data:{ labels:classArpuE.map(d=>d.label),
-      datasets:[{ data:classArpuE.map(d=>Math.round(d.arpu)), backgroundColor:COLORS.map(c=>c+'cc'), borderRadius:4 }] },
-    options:{ ...CHART_DEFAULTS, indexAxis:'y',
-      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
-      scales:darkScales() }
-  });
-
-  // ── ELIGIBILITY ──
-  // Uses pre-computed eligible / notEligible arrays
-  makeChart('eligChart', {
-    type:'doughnut',
-    data:{ labels:['Eligible','Not Eligible'],
-      datasets:[{ data:[eligible.length, notEligible.length], backgroundColor:['#10b981','#ef4444'], borderWidth:0 }] },
-    options:{ ...CHART_DEFAULTS, cutout:'65%',
-      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} },
-        tooltip:{ callbacks:{ label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw, ay26.length)}%)` } } } }
-  });
-
-  // ── BATCH ALLOCATION ──
-  // Among ELIGIBLE students only: allocated (has batch code) vs not allocated ('No Batch' / blank)
-  makeChart('batchChart', {
-    type:'doughnut',
-    data:{ labels:['Batch Allocated','Not Allocated'],
-      datasets:[{ data:[allocated.length, notAllocated.length], backgroundColor:['#3b82f6','#f59e0b'], borderWidth:0 }] },
-    options:{ ...CHART_DEFAULTS, cutout:'65%',
-      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} },
-        tooltip:{ callbacks:{ label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw, eligible.length)}% of eligible)` } } } }
-  });
-
-  // ── PAYMENT SPLIT ──
-  // Uses pre-computed payCount (keyed by PAY_LABELS, initialised to 0)
-  document.getElementById('payment-grid').innerHTML = PAY_LABELS.map((p,i)=>{
-    const cnt = payCount[p] || 0;
-    return `<div class="payment-card">
-      <div class="payment-label">${p}</div>
-      <div class="payment-count">${fmt(cnt)}</div>
-      <div class="payment-pct">${pct(cnt,ay26.length)}% of total</div>
-      <div class="progress-bar" style="margin-top:8px">
-        <div class="progress-fill" style="width:${pct(cnt,ay26.length)}%;background:${PAY_COLORS[i]}"></div>
-      </div>
+  // ── PAYMENT GRID ───────────────────────────────────────────────────────────
+  document.getElementById('payment-grid').innerHTML=PL.map((p,i)=>{
+    const cnt=pCnt[p];
+    return`<div class="pay-card">
+      <div class="pay-label">${p}</div>
+      <div class="pay-count" style="color:${PC[i]}">${fmt(cnt)}</div>
+      <div class="pay-pct">${pct(cnt,all.length)}% of total</div>
+      <div class="bar" style="margin-top:10px"><div class="bar-fill" style="width:${pct(cnt,all.length)}%;background:${PC[i]}"></div></div>
     </div>`;
   }).join('');
 
-  // ── ENROLLMENT CHART ──
-  const enrollCount = {};
-  ay26.forEach(r=>{ const e=r.ay26_enrollment_status||'Unknown'; enrollCount[e]=(enrollCount[e]||0)+1; });
-  const enrollEntries = Object.entries(enrollCount).sort((a,b)=>b[1]-a[1]);
-  makeChart('enrollChart', {
-    type:'doughnut',
-    data:{ labels:enrollEntries.map(([k])=>k),
-      datasets:[{ data:enrollEntries.map(([,v])=>v), backgroundColor:[COLORS[3],COLORS[0],COLORS[4],COLORS[2]], borderWidth:0 }] },
-    options:{ ...CHART_DEFAULTS, cutout:'60%',
-      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
-  });
+  // ── MONTH / DAY ────────────────────────────────────────────────────────────
+  const mC={};all.forEach(r=>{if(r.month)mC[r.month]=(mC[r.month]||0)+1;});
+  const mL=MONTHS.filter(m=>mC[m]);
+  mc('monthChart',{type:'bar',
+    data:{labels:mL,datasets:[{label:'Admissions',data:mL.map(m=>mC[m]),
+      backgroundColor:mL.map((_,i)=>C[i%C.length]+'cc'),borderColor:mL.map((_,i)=>C[i%C.length]),borderWidth:1,borderRadius:6}]},
+    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,legend:{display:false}}}});
 
-  // ── WING CHART ──
-  const wingCount = {};
-  ay26.forEach(r=>{ const w=r.wing||r.Wing||'Unknown'; wingCount[w]=(wingCount[w]||0)+1; });
-  makeChart('wingChart', {
-    type:'doughnut',
-    data:{ labels:Object.keys(wingCount),
-      datasets:[{ data:Object.values(wingCount), backgroundColor:[COLORS[0],COLORS[3]], borderWidth:0 }] },
-    options:{ ...CHART_DEFAULTS, cutout:'60%',
-      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
-  });
+  const dC={};all.forEach(r=>{if(r.day){const d=parseInt(r.day);if(!isNaN(d))dC[d]=(dC[d]||0)+1;}});
+  const dL=Object.keys(dC).map(Number).sort((a,b)=>a-b);
+  mc('dayChart',{type:'line',
+    data:{labels:dL,datasets:[{label:'Admissions',data:dL.map(d=>dC[d]),
+      borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#3b82f6',pointBorderColor:'transparent'}]},
+    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,legend:{display:false}}}});
 
-  // ── SHOW ──
-  const now = new Date();
-  document.getElementById('last-updated').textContent = `Last updated: ${now.toLocaleTimeString()} — ${fmt(ay26.length)} AY26 records loaded`;
-  document.getElementById('footer-time').textContent  = now.toLocaleString();
-  document.getElementById('loading').style.display   = 'none';
-  document.getElementById('dashboard').style.display = 'block';
+  // ── DONUTS ─────────────────────────────────────────────────────────────────
+  const mkD=(id,entries,colors,pos='bottom')=>mc(id,{type:'doughnut',
+    data:{labels:entries.map(([k])=>k),datasets:[{data:entries.map(([,v])=>v),backgroundColor:colors,borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'62%',plugins:{legend:{position:pos,labels:{color:'#64748b',font:{size:10},boxWidth:10,padding:10}}}}});
+
+  const clC={};all.forEach(r=>{if(r.class_course)clC[r.class_course]=(clC[r.class_course]||0)+1;});
+  mkD('classChart',Object.entries(clC).sort((a,b)=>b[1]-a[1]),C);
+
+  const bC={};all.forEach(r=>{const b=r.board_name||'Unknown';bC[b]=(bC[b]||0)+1;});
+  mkD('boardChart',Object.entries(bC).filter(([k])=>k).sort((a,b)=>b[1]-a[1]),[C[2],C[0],C[1],C[3],C[4]]);
+
+  const wC={};all.forEach(r=>{const w=r.wing||r.Wing||'Unknown';wC[w]=(wC[w]||0)+1;});
+  mkD('wingChart',Object.entries(wC),[C[0],C[2],C[3],C[1]]);
+
+  const enC={};all.forEach(r=>{const e=r.ay26_enrollment_status||'Unknown';enC[e]=(enC[e]||0)+1;});
+  mc('enrollChart',{type:'doughnut',
+    data:{labels:Object.entries(enC).sort((a,b)=>b[1]-a[1]).map(([k])=>k),
+      datasets:[{data:Object.entries(enC).sort((a,b)=>b[1]-a[1]).map(([,v])=>v),backgroundColor:[C[2],C[0],C[3],C[1],C[4]],borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#64748b',font:{size:11},boxWidth:10,padding:10}}}}});
+
+  // ── ELIGIBILITY & BATCH ────────────────────────────────────────────────────
+  mc('eligChart',{type:'doughnut',
+    data:{labels:['Eligible','Not Eligible'],datasets:[{data:[eligible.length,notElig.length],backgroundColor:['#10b981','#ef4444'],borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{size:11},boxWidth:10,padding:10}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw,regWF.length)}% of fresh)`}}}}});
+  document.getElementById('elig-stats').innerHTML=`
+    <div><div class="s-label">Eligible</div><div class="s-val" style="color:#34d399">${fmt(eligible.length)}</div><div class="s-sub">${pct(eligible.length,regWF.length)}% of fresh registrations</div></div>
+    <div><div class="s-label">Not Eligible</div><div class="s-val" style="color:#f87171">${fmt(notElig.length)}</div><div class="s-sub">${pct(notElig.length,regWF.length)}% of fresh registrations</div></div>`;
+
+  mc('batchChart',{type:'doughnut',
+    data:{labels:['Allotted','Pending'],datasets:[{data:[batAllot.length,batPend.length],backgroundColor:['#3b82f6','#f59e0b'],borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{size:11},boxWidth:10,padding:10}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw,eligible.length)}% of eligible)`}}}}});
+  document.getElementById('batch-stats').innerHTML=`
+    <div><div class="s-label">Allotted</div><div class="s-val" style="color:#60a5fa">${fmt(batAllot.length)}</div><div class="s-sub">${pct(batAllot.length,eligible.length)}% of eligible</div></div>
+    <div><div class="s-label">Pending</div><div class="s-val" style="color:#fbbf24">${fmt(batPend.length)}</div><div class="s-sub">${pct(batPend.length,eligible.length)}% of eligible</div></div>`;
+
+  // ── SHOW ───────────────────────────────────────────────────────────────────
+  const now=new Date();
+  document.getElementById('last-updated').textContent=`Last updated: ${now.toLocaleTimeString('en-IN')}`;
+  document.getElementById('row-pill').textContent=`${fmt(all.length)} Students`;
+  document.getElementById('footer-time').textContent=now.toLocaleString('en-IN');
+  document.getElementById('loading').style.display='none';
+  document.getElementById('dashboard').style.display='block';
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
 loadData();
 </script>
 </body>
