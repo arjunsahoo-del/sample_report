@@ -30,7 +30,6 @@
     min-height: 100vh;
   }
 
-  /* HEADER */
   .header {
     background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
     border-bottom: 1px solid var(--border);
@@ -71,7 +70,6 @@
   }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* LOADING */
   #loading {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -87,7 +85,6 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   #loading p { color: var(--muted); font-size: 14px; }
 
-  /* MAIN */
   #dashboard { display: none; }
   .container { max-width: 1400px; margin: 0 auto; padding: 32px 40px; }
   .section-title {
@@ -101,7 +98,6 @@
     content: ''; flex: 1; height: 1px; background: var(--border);
   }
 
-  /* KPI CARDS */
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -139,7 +135,6 @@
   .kpi-card.pink .kpi-value { color: #f472b6; }
   .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
 
-  /* CHARTS GRID */
   .charts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -163,7 +158,6 @@
   .chart-wrap.tall { height: 320px; }
   .chart-wrap.short { height: 200px; }
 
-  /* TABLES */
   .table-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -196,7 +190,6 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: rgba(59,130,246,0.04); }
 
-  /* TAGS */
   .tag {
     display: inline-block; padding: 2px 8px;
     border-radius: 4px; font-size: 11px; font-weight: 500;
@@ -208,7 +201,6 @@
   .tag-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
   .tag-gray { background: rgba(100,116,139,0.15); color: #94a3b8; }
 
-  /* PROGRESS BAR */
   .progress-bar {
     height: 6px; background: var(--border);
     border-radius: 3px; overflow: hidden; margin-top: 4px;
@@ -219,7 +211,6 @@
     transition: width 0.6s ease;
   }
 
-  /* PAYMENT SPLIT */
   .payment-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -237,23 +228,27 @@
   }
   .payment-pct { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  /* ELIGIBILITY SPLIT */
   .elig-grid {
     display: grid; grid-template-columns: 1fr 1fr;
     gap: 20px; margin-bottom: 40px;
   }
 
-  /* FOOTER */
   .footer {
     text-align: center; padding: 32px;
     color: var(--muted); font-size: 12px;
     border-top: 1px solid var(--border);
   }
 
-  /* NUMBER FORMAT */
   .num { font-family: 'Syne', sans-serif; font-weight: 700; }
 
-  /* RESPONSIVE */
+  .error-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 12px; padding: 20px 24px;
+    color: #f87171; font-size: 13px; line-height: 1.6;
+    margin: 20px 0;
+  }
+
   @media(max-width: 900px) {
     .charts-grid, .charts-grid.three, .elig-grid { grid-template-columns: 1fr; }
     .container { padding: 20px; }
@@ -278,17 +273,15 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <p>Fetching live data from Google Sheets...</p>
+  <p id="loading-msg">Fetching live data from Google Sheets...</p>
 </div>
 
 <div id="dashboard">
 <div class="container">
 
-  <!-- KPI SECTION -->
   <div class="section-title">Summary Overview</div>
   <div class="kpi-grid" id="kpi-grid"></div>
 
-  <!-- CENTER-WISE ADMISSIONS -->
   <div class="section-title">Center-wise Admission Count</div>
   <div class="table-card">
     <div class="table-header">
@@ -314,7 +307,6 @@
     </div>
   </div>
 
-  <!-- CHARTS ROW 1 -->
   <div class="section-title">Admission Trends</div>
   <div class="charts-grid">
     <div class="chart-card">
@@ -329,7 +321,6 @@
     </div>
   </div>
 
-  <!-- CLASS & BOARD -->
   <div class="section-title">Course & Board Analysis</div>
   <div class="charts-grid">
     <div class="chart-card">
@@ -344,7 +335,6 @@
     </div>
   </div>
 
-  <!-- FEE COLLECTION -->
   <div class="section-title">Fee Collection Analysis — Center-wise</div>
   <div class="chart-card" style="margin-bottom:20px">
     <div class="chart-title">Center-wise: Fees Amount vs Fees Paid</div>
@@ -370,7 +360,6 @@
     </div>
   </div>
 
-  <!-- ARPU -->
   <div class="section-title">ARPU Report (arpu_check = Yes)</div>
   <div class="charts-grid three" style="margin-bottom:20px">
     <div class="chart-card">
@@ -390,7 +379,6 @@
     </div>
   </div>
 
-  <!-- ELIGIBILITY vs BATCH -->
   <div class="section-title">Eligibility vs Batch Allocation</div>
   <div class="elig-grid" style="margin-bottom:40px">
     <div class="chart-card">
@@ -405,11 +393,9 @@
     </div>
   </div>
 
-  <!-- PAYMENT CHECK SPLIT -->
   <div class="section-title">Payment Check Split</div>
   <div class="payment-grid" id="payment-grid"></div>
 
-  <!-- ENROLLMENT STATUS -->
   <div class="section-title">AY26 Enrollment Status Breakdown</div>
   <div class="charts-grid" style="margin-bottom:40px">
     <div class="chart-card">
@@ -424,18 +410,17 @@
     </div>
   </div>
 
-</div><!-- /container -->
+</div>
 <div class="footer">
-  AY26 Student Report — East Region &nbsp;|&nbsp; Auto-generated from Google Sheets &nbsp;|&nbsp;
+  AY26 Student Report — East Region &nbsp;|&nbsp; Live from Google Sheets via Apps Script &nbsp;|&nbsp;
   <span id="footer-time"></span>
 </div>
-</div><!-- /dashboard -->
+</div>
 
 <script>
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const SHEET_ID = '1Q2Uco6jYY4OuVryevk4pchw1pWDf0nA43bsEcbPlrHA';
-const GID = '0';
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+// ✅ Using Apps Script JSON endpoint (no CORS issues)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXgTqB73GbVG20zc3aWOmTj0kobuJXEt92jA0EeCJ4nNG1TPW0o86kWbKdIepgrECZ/exec';
 
 const MONTH_ORDER = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
 
@@ -449,88 +434,66 @@ const COLORS = [
 
 let charts = {};
 
-// ─── CSV PARSE ────────────────────────────────────────────────────────────────
-function parseCSV(text) {
-  const lines = text.split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/\r/,''));
-  return lines.slice(1).filter(l => l.trim()).map(line => {
-    const vals = [];
-    let cur = '', inQ = false;
-    for (let ch of line) {
-      if (ch === '"') inQ = !inQ;
-      else if (ch === ',' && !inQ) { vals.push(cur); cur = ''; }
-      else cur += ch;
-    }
-    vals.push(cur);
-    const obj = {};
-    headers.forEach((h, i) => obj[h] = (vals[i] || '').trim().replace(/\r/,''));
-    return obj;
-  });
-}
-
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
-const fmt = n => Math.round(n).toLocaleString('en-IN');
+const fmt  = n => Math.round(n).toLocaleString('en-IN');
 const fmtC = n => '₹' + Math.round(n).toLocaleString('en-IN');
-const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
-const pct = (a,b) => b ? ((a/b)*100).toFixed(1) : '0.0';
+const avg  = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+const pct  = (a,b) => b ? ((a/b)*100).toFixed(1) : '0.0';
 
 function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
 
 function makeChart(id, config) {
   destroyChart(id);
-  const ctx = document.getElementById(id).getContext('2d');
-  charts[id] = new Chart(ctx, config);
+  const el = document.getElementById(id);
+  if (!el) return;
+  charts[id] = new Chart(el.getContext('2d'), config);
 }
 
 const CHART_DEFAULTS = {
   responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
-  scales: {}
+  plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } }
 };
 
-function darkScales(stacked = false) {
+function darkScales() {
   return {
-    x: {
-      ticks: { color: '#64748b', font: { size: 10 } },
-      grid: { color: 'rgba(30,45,69,0.5)' },
-      stacked
-    },
-    y: {
-      ticks: { color: '#64748b', font: { size: 10 } },
-      grid: { color: 'rgba(30,45,69,0.5)' },
-      stacked
-    }
+    x: { ticks: { color: '#64748b', font:{size:10} }, grid: { color: 'rgba(30,45,69,0.5)' } },
+    y: { ticks: { color: '#64748b', font:{size:10} }, grid: { color: 'rgba(30,45,69,0.5)' } }
   };
 }
 
-// ─── MAIN LOAD ────────────────────────────────────────────────────────────────
+// ─── FETCH DATA ────────────────────────────────────────────────────────────────
 async function loadData() {
   document.getElementById('loading').style.display = 'flex';
   document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loading-msg').textContent = 'Fetching live data from Google Sheets...';
 
   let rows;
   try {
-    const res = await fetch(CSV_URL + '&t=' + Date.now());
-    if (!res.ok) throw new Error('Network error');
+    // Apps Script returns JSON — just fetch it directly
+    const res = await fetch(APPS_SCRIPT_URL, { redirect: 'follow' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const text = await res.text();
-    rows = parseCSV(text);
+
+    // Apps Script sometimes wraps in /**/ for JSONP — strip if needed
+    const clean = text.replace(/^\/\*\*\/[^(]*\(/, '').replace(/\);?\s*$/, '').trim();
+    rows = JSON.parse(clean.startsWith('[') ? clean : text);
+
+    if (!Array.isArray(rows)) throw new Error('Unexpected response format');
   } catch(e) {
-    // Fallback: try without cache-bust
-    try {
-      const res = await fetch(CSV_URL);
-      const text = await res.text();
-      rows = parseCSV(text);
-    } catch(e2) {
-      document.getElementById('loading').innerHTML = `
-        <div style="text-align:center;color:#ef4444;">
-          <div style="font-size:32px">⚠️</div>
-          <p style="margin-top:12px;font-size:14px;">Could not fetch Google Sheet.<br>
-          Please ensure the sheet is set to <strong>"Anyone with the link can view"</strong>.<br><br>
-          <button onclick="loadData()" style="background:#3b82f6;color:white;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px;">Retry</button>
-          </p>
-        </div>`;
-      return;
-    }
+    document.getElementById('loading').innerHTML = `
+      <div style="text-align:center">
+        <div style="font-size:40px;margin-bottom:16px">⚠️</div>
+        <div class="error-box" style="max-width:520px;margin:0 auto;text-align:left">
+          <strong>Could not load data</strong><br><br>
+          Error: ${e.message}<br><br>
+          <strong>Things to check:</strong><br>
+          1. Apps Script is deployed as <em>"Execute as: Me"</em> and <em>"Who has access: Anyone"</em><br>
+          2. You have re-deployed after any code changes (Deploy → Manage deployments → ✏️ Edit → New version)<br>
+          3. The sheet has data with an <code>acad_year</code> column containing <code>AY26</code>
+        </div>
+        <button onclick="loadData()" style="margin-top:20px;background:#3b82f6;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">↻ Retry</button>
+      </div>`;
+    return;
   }
 
   buildDashboard(rows);
@@ -538,23 +501,43 @@ async function loadData() {
 
 // ─── BUILD DASHBOARD ──────────────────────────────────────────────────────────
 function buildDashboard(rows) {
-  const ay26 = rows.filter(r => (r.acad_year || r['acad_year'] || '').trim() === 'AY26');
+  // Normalise keys to lowercase with underscores (Apps Script may vary)
+  const norm = rows.map(r => {
+    const o = {};
+    Object.keys(r).forEach(k => { o[k.trim().toLowerCase().replace(/\s+/g,'_')] = String(r[k]||'').trim(); });
+    return o;
+  });
+
+  const ay26 = norm.filter(r => r.acad_year === 'AY26');
+
+  if (ay26.length === 0) {
+    document.getElementById('loading').innerHTML = `
+      <div style="text-align:center">
+        <div style="font-size:40px;margin-bottom:16px">🔍</div>
+        <div class="error-box" style="max-width:480px;margin:0 auto;text-align:left">
+          <strong>No AY26 data found</strong><br><br>
+          Data was fetched (${norm.length} total rows) but none matched <code>acad_year = AY26</code>.<br><br>
+          Column names detected: <code>${Object.keys(norm[0]||{}).join(', ')}</code>
+        </div>
+        <button onclick="loadData()" style="margin-top:20px;background:#3b82f6;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">↻ Retry</button>
+      </div>`;
+    return;
+  }
 
   // ── KPIs ──
-  const fresh = ay26.filter(r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status));
+  const fresh      = ay26.filter(r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status));
   const freeEnroll = fresh.filter(r => r.free_admission?.toUpperCase() === 'TRUE');
   const paidEnroll = fresh.filter(r => r.free_admission?.toUpperCase() === 'FALSE');
-  const retained = ay26.filter(r => r.ay26_enrollment_status === 'Retained');
-  const lessThanReg = ay26.filter(r => r.ay26_enrollment_status === 'Less than Registration');
-  const arpu_rows = ay26.filter(r => (r.arpu_check || r.Arpu || '').trim().toLowerCase() === 'yes');
-  const arpu_vals = arpu_rows.map(r => parseFloat(r.arpu||r.Arpu||0)).filter(v => !isNaN(v) && v > 0);
+  const retained   = ay26.filter(r => r.ay26_enrollment_status === 'Retained');
+  const arpu_rows  = ay26.filter(r => (r.arpu_check||'').toLowerCase() === 'yes');
+  const arpu_vals  = arpu_rows.map(r => parseFloat(r.arpu||0)).filter(v => !isNaN(v) && v > 0);
   const overallArpu = avg(arpu_vals);
 
   const totalFees = ay26.reduce((s,r) => s + (parseFloat(r.fees_amt)||0), 0);
   const totalPaid = ay26.reduce((s,r) => s + (parseFloat(r.fees_paid)||0), 0);
 
-  const eligible = ay26.filter(r => r.eligibility_status === 'Eligible' || r.Eligibility_status === 'Eligible');
-  const allocated = ay26.filter(r => r.batch && r.batch.trim() !== '' && r.batch.trim() !== 'No Batch');
+  const eligible  = ay26.filter(r => (r.eligibility_status||'') === 'Eligible');
+  const allocated = ay26.filter(r => r.batch && r.batch !== '' && r.batch !== 'No Batch');
 
   document.getElementById('kpi-grid').innerHTML = `
     <div class="kpi-card blue">
@@ -608,11 +591,10 @@ function buildDashboard(rows) {
   });
   const centers = Object.entries(centerMap).sort((a,b) => b[1].length - a[1].length);
   document.getElementById('center-total-label').textContent = `${centers.length} Centers`;
-
   document.getElementById('center-tbody').innerHTML = centers.map(([c, rs]) => {
-    const fr = rs.filter(r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status));
-    const wo = fr.filter(r => r.free_admission?.toUpperCase() === 'FALSE');
-    const fe = fr.filter(r => r.free_admission?.toUpperCase() === 'TRUE');
+    const fr  = rs.filter(r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status));
+    const wo  = fr.filter(r => r.free_admission?.toUpperCase() === 'FALSE');
+    const fe  = fr.filter(r => r.free_admission?.toUpperCase() === 'TRUE');
     const ret = rs.filter(r => r.ay26_enrollment_status === 'Retained');
     const ltr = rs.filter(r => r.ay26_enrollment_status === 'Less than Registration');
     const share = ((rs.length / ay26.length) * 100).toFixed(1);
@@ -636,242 +618,201 @@ function buildDashboard(rows) {
   const monthCount = {};
   ay26.forEach(r => { if(r.month) monthCount[r.month] = (monthCount[r.month]||0)+1; });
   const monthLabels = MONTH_ORDER.filter(m => monthCount[m]);
-  const monthData = monthLabels.map(m => monthCount[m]);
+  const monthData   = monthLabels.map(m => monthCount[m]);
   makeChart('monthChart', {
     type: 'bar',
     data: {
       labels: monthLabels,
-      datasets: [{
-        label: 'Admissions',
-        data: monthData,
-        backgroundColor: monthData.map((_,i) => COLORS[i % COLORS.length] + 'cc'),
-        borderColor: monthData.map((_,i) => COLORS[i % COLORS.length]),
-        borderWidth: 1, borderRadius: 6
-      }]
+      datasets: [{ label: 'Admissions', data: monthData,
+        backgroundColor: monthData.map((_,i)=>COLORS[i%COLORS.length]+'cc'),
+        borderColor: monthData.map((_,i)=>COLORS[i%COLORS.length]),
+        borderWidth:1, borderRadius:6 }]
     },
     options: { ...CHART_DEFAULTS, scales: darkScales(),
-      plugins: { ...CHART_DEFAULTS.plugins, legend: { display: false } } }
+      plugins: { ...CHART_DEFAULTS.plugins, legend:{display:false} } }
   });
 
   // ── DAY CHART ──
   const dayCount = {};
-  ay26.forEach(r => { if(r.Day) dayCount[parseInt(r.Day)] = (dayCount[parseInt(r.Day)]||0)+1; });
+  ay26.forEach(r => { if(r.day) { const d=parseInt(r.day); if(!isNaN(d)) dayCount[d]=(dayCount[d]||0)+1; }});
   const dayLabels = Object.keys(dayCount).map(Number).sort((a,b)=>a-b);
   makeChart('dayChart', {
     type: 'line',
     data: {
       labels: dayLabels,
-      datasets: [{
-        label: 'Admissions',
-        data: dayLabels.map(d => dayCount[d]),
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59,130,246,0.1)',
-        fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#3b82f6'
-      }]
+      datasets: [{ label:'Admissions', data: dayLabels.map(d=>dayCount[d]),
+        borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.1)',
+        fill:true, tension:0.4, pointRadius:3, pointBackgroundColor:'#3b82f6' }]
     },
     options: { ...CHART_DEFAULTS, scales: darkScales(),
-      plugins: { ...CHART_DEFAULTS.plugins, legend: { display: false } } }
+      plugins: { ...CHART_DEFAULTS.plugins, legend:{display:false} } }
   });
 
   // ── CLASS CHART ──
   const classCount = {};
-  ay26.forEach(r => { if(r.class_course) classCount[r.class_course] = (classCount[r.class_course]||0)+1; });
+  ay26.forEach(r => { if(r.class_course) classCount[r.class_course]=(classCount[r.class_course]||0)+1; });
   const classEntries = Object.entries(classCount).sort((a,b)=>b[1]-a[1]);
   makeChart('classChart', {
     type: 'doughnut',
-    data: {
-      labels: classEntries.map(([k]) => k),
-      datasets: [{ data: classEntries.map(([,v])=>v), backgroundColor: COLORS, borderWidth: 0 }]
-    },
-    options: { ...CHART_DEFAULTS, cutout: '60%',
-      plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font:{size:10}, boxWidth:12 } } } }
+    data: { labels: classEntries.map(([k])=>k),
+      datasets:[{ data:classEntries.map(([,v])=>v), backgroundColor:COLORS, borderWidth:0 }] },
+    options: { ...CHART_DEFAULTS, cutout:'60%',
+      plugins:{ legend:{ position:'right', labels:{color:'#94a3b8',font:{size:10},boxWidth:12} } } }
   });
 
   // ── BOARD CHART ──
   const boardCount = {};
-  ay26.forEach(r => { const b = r.board_name||'Unknown'; if(b) boardCount[b]=(boardCount[b]||0)+1; });
+  ay26.forEach(r => { const b=r.board_name||'Unknown'; boardCount[b]=(boardCount[b]||0)+1; });
   const boardEntries = Object.entries(boardCount).filter(([k])=>k).sort((a,b)=>b[1]-a[1]);
   makeChart('boardChart', {
     type: 'doughnut',
-    data: {
-      labels: boardEntries.map(([k])=>k),
-      datasets: [{ data: boardEntries.map(([,v])=>v), backgroundColor: [COLORS[3],COLORS[0],COLORS[2],COLORS[4],COLORS[6]], borderWidth: 0 }]
-    },
-    options: { ...CHART_DEFAULTS, cutout: '60%',
-      plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font:{size:10}, boxWidth:12 } } } }
+    data: { labels: boardEntries.map(([k])=>k),
+      datasets:[{ data:boardEntries.map(([,v])=>v), backgroundColor:[COLORS[3],COLORS[0],COLORS[2],COLORS[4],COLORS[6]], borderWidth:0 }] },
+    options: { ...CHART_DEFAULTS, cutout:'60%',
+      plugins:{ legend:{ position:'right', labels:{color:'#94a3b8',font:{size:10},boxWidth:12} } } }
   });
 
   // ── FEE CHART ──
-  const feeData = centers.slice(0, 15).map(([c, rs]) => {
-    const tFees = rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-    const tPaid = rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    const shortC = c.replace(/- |Vidyapeeth|Tuition Center/g,'').trim().substring(0,20);
-    return { label: shortC, fees: tFees, paid: tPaid };
+  const feeData = centers.slice(0,15).map(([c,rs])=>{
+    const tF = rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
+    const tP = rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
+    return { label: c.replace(/- |Vidyapeeth|Tuition Center/g,'').trim().substring(0,20), fees:tF, paid:tP };
   });
   makeChart('feeChart', {
-    type: 'bar',
-    data: {
-      labels: feeData.map(d=>d.label),
-      datasets: [
-        { label: 'Total Fees Amt', data: feeData.map(d=>Math.round(d.fees)), backgroundColor: 'rgba(99,102,241,0.7)', borderRadius: 4 },
-        { label: 'Fees Paid', data: feeData.map(d=>Math.round(d.paid)), backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 4 }
-      ]
-    },
-    options: { ...CHART_DEFAULTS, scales: darkScales(),
-      plugins: { legend: { labels: { color: '#94a3b8', font:{size:11} } } } }
+    type:'bar',
+    data:{ labels:feeData.map(d=>d.label),
+      datasets:[
+        { label:'Total Fees Amt', data:feeData.map(d=>Math.round(d.fees)), backgroundColor:'rgba(99,102,241,0.7)', borderRadius:4 },
+        { label:'Fees Paid',      data:feeData.map(d=>Math.round(d.paid)), backgroundColor:'rgba(16,185,129,0.7)', borderRadius:4 }
+      ]},
+    options:{ ...CHART_DEFAULTS, scales:darkScales(),
+      plugins:{ legend:{ labels:{color:'#94a3b8',font:{size:11}} } } }
   });
 
   // ── FEE TABLE ──
-  document.getElementById('fee-tbody').innerHTML = centers.map(([c, rs]) => {
-    const tFees = rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-    const tPaid = rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    const pending = tFees - tPaid;
-    const cp = pct(tPaid, tFees);
-    const cpNum = parseFloat(cp);
-    const tagClass = cpNum >= 80 ? 'tag-green' : cpNum >= 50 ? 'tag-orange' : 'tag-red';
-    return `<tr>
-      <td>${c}</td>
-      <td>${fmt(rs.length)}</td>
-      <td>${fmtC(tFees)}</td>
-      <td>${fmtC(tPaid)}</td>
+  document.getElementById('fee-tbody').innerHTML = centers.map(([c,rs])=>{
+    const tF=rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
+    const tP=rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
+    const pending=tF-tP; const cp=pct(tP,tF); const cpN=parseFloat(cp);
+    const tagClass = cpN>=80?'tag-green':cpN>=50?'tag-orange':'tag-red';
+    return `<tr><td>${c}</td><td>${fmt(rs.length)}</td><td>${fmtC(tF)}</td><td>${fmtC(tP)}</td>
       <td style="color:${pending>0?'#f87171':'#34d399'}">${fmtC(pending)}</td>
-      <td><span class="tag ${tagClass}">${cp}%</span></td>
-    </tr>`;
+      <td><span class="tag ${tagClass}">${cp}%</span></td></tr>`;
   }).join('');
 
   // ── ARPU CHARTS ──
-  // Overall gauge-like bar
   makeChart('arpuOverallChart', {
-    type: 'bar',
-    data: {
-      labels: ['Overall ARPU'],
-      datasets: [{ data: [Math.round(overallArpu)], backgroundColor: ['rgba(139,92,246,0.8)'], borderRadius: 8, borderSkipped: false }]
-    },
-    options: { ...CHART_DEFAULTS, indexAxis: 'y',
-      plugins: { legend:{display:false}, tooltip:{callbacks:{label: ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
-      scales: darkScales() }
+    type:'bar',
+    data:{ labels:['Overall ARPU'],
+      datasets:[{ data:[Math.round(overallArpu)], backgroundColor:['rgba(139,92,246,0.8)'], borderRadius:8, borderSkipped:false }] },
+    options:{ ...CHART_DEFAULTS, indexAxis:'y',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
+      scales:darkScales() }
   });
 
-  // Center ARPU
-  const centerArpu = centers.map(([c, rs]) => {
-    const aRows = rs.filter(r => (r.arpu_check||r.Arpu||'').toLowerCase()==='yes');
-    const aVals = aRows.map(r=>parseFloat(r.arpu||0)).filter(v=>!isNaN(v)&&v>0);
-    return { label: c.replace(/- |Vidyapeeth|Tuition Center/g,'').trim().substring(0,15), arpu: avg(aVals) };
+  const centerArpu = centers.map(([c,rs])=>{
+    const aV = rs.filter(r=>(r.arpu_check||'').toLowerCase()==='yes').map(r=>parseFloat(r.arpu||0)).filter(v=>!isNaN(v)&&v>0);
+    return { label:c.replace(/- |Vidyapeeth|Tuition Center/g,'').trim().substring(0,15), arpu:avg(aV) };
   }).filter(d=>d.arpu>0).sort((a,b)=>b.arpu-a.arpu).slice(0,10);
   makeChart('arpuCenterChart', {
-    type: 'bar',
-    data: {
-      labels: centerArpu.map(d=>d.label),
-      datasets: [{ data: centerArpu.map(d=>Math.round(d.arpu)), backgroundColor: COLORS.map(c=>c+'cc'), borderRadius: 4 }]
-    },
-    options: { ...CHART_DEFAULTS, indexAxis: 'y',
-      plugins: { legend:{display:false}, tooltip:{callbacks:{label: ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
-      scales: darkScales() }
+    type:'bar',
+    data:{ labels:centerArpu.map(d=>d.label),
+      datasets:[{ data:centerArpu.map(d=>Math.round(d.arpu)), backgroundColor:COLORS.map(c=>c+'cc'), borderRadius:4 }] },
+    options:{ ...CHART_DEFAULTS, indexAxis:'y',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
+      scales:darkScales() }
   });
 
-  // Class ARPU
   const classArpu = {};
   ay26.forEach(r => {
-    if ((r.arpu_check||r.Arpu||'').toLowerCase()==='yes') {
-      const cl = r.class_course||'Unknown';
-      if (!classArpu[cl]) classArpu[cl] = [];
-      const v = parseFloat(r.arpu||0);
-      if (!isNaN(v) && v>0) classArpu[cl].push(v);
+    if((r.arpu_check||'').toLowerCase()==='yes'){
+      const cl=r.class_course||'Unknown';
+      if(!classArpu[cl]) classArpu[cl]=[];
+      const v=parseFloat(r.arpu||0);
+      if(!isNaN(v)&&v>0) classArpu[cl].push(v);
     }
   });
-  const classArpuEntries = Object.entries(classArpu).map(([k,v])=>({label:k,arpu:avg(v)})).sort((a,b)=>b.arpu-a.arpu);
+  const classArpuE = Object.entries(classArpu).map(([k,v])=>({label:k,arpu:avg(v)})).sort((a,b)=>b.arpu-a.arpu);
   makeChart('arpuClassChart', {
-    type: 'bar',
-    data: {
-      labels: classArpuEntries.map(d=>d.label),
-      datasets: [{ data: classArpuEntries.map(d=>Math.round(d.arpu)), backgroundColor: COLORS.map(c=>c+'cc'), borderRadius: 4 }]
-    },
-    options: { ...CHART_DEFAULTS, indexAxis: 'y',
-      plugins: { legend:{display:false}, tooltip:{callbacks:{label: ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
-      scales: darkScales() }
+    type:'bar',
+    data:{ labels:classArpuE.map(d=>d.label),
+      datasets:[{ data:classArpuE.map(d=>Math.round(d.arpu)), backgroundColor:COLORS.map(c=>c+'cc'), borderRadius:4 }] },
+    options:{ ...CHART_DEFAULTS, indexAxis:'y',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
+      scales:darkScales() }
   });
 
   // ── ELIGIBILITY ──
   const eligCount = {};
   ay26.forEach(r => {
-    const e = r.Eligibility_status || r.eligibility_status || 'Unknown';
-    const key = e === 'Eligible' ? 'Eligible' : 'Not Eligible';
-    eligCount[key] = (eligCount[key]||0)+1;
+    const key = (r.eligibility_status||'') === 'Eligible' ? 'Eligible' : 'Not Eligible';
+    eligCount[key]=(eligCount[key]||0)+1;
   });
   makeChart('eligChart', {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(eligCount),
-      datasets: [{ data: Object.values(eligCount), backgroundColor: ['#10b981','#ef4444'], borderWidth: 0 }]
-    },
-    options: { ...CHART_DEFAULTS, cutout: '65%',
-      plugins: { legend: { position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
+    type:'doughnut',
+    data:{ labels:Object.keys(eligCount),
+      datasets:[{ data:Object.values(eligCount), backgroundColor:['#10b981','#ef4444'], borderWidth:0 }] },
+    options:{ ...CHART_DEFAULTS, cutout:'65%',
+      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
   });
 
   // ── BATCH ALLOCATION ──
-  const eligStudents = ay26.filter(r => (r.Eligibility_status||r.eligibility_status||'')  === 'Eligible');
-  const batchAllocated = eligStudents.filter(r => r.batch && r.batch.trim() !== '' && r.batch.trim() !== 'No Batch');
-  const batchNotAllocated = eligStudents.filter(r => !r.batch || r.batch.trim() === '' || r.batch.trim() === 'No Batch');
+  const eligS    = ay26.filter(r=>(r.eligibility_status||'')==='Eligible');
+  const batchA   = eligS.filter(r=>r.batch&&r.batch!==''&&r.batch!=='No Batch');
+  const batchNA  = eligS.filter(r=>!r.batch||r.batch===''||r.batch==='No Batch');
   makeChart('batchChart', {
-    type: 'doughnut',
-    data: {
-      labels: ['Batch Allocated', 'Not Allocated'],
-      datasets: [{ data: [batchAllocated.length, batchNotAllocated.length], backgroundColor: ['#3b82f6','#f59e0b'], borderWidth: 0 }]
-    },
-    options: { ...CHART_DEFAULTS, cutout: '65%',
-      plugins: { legend: { position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
+    type:'doughnut',
+    data:{ labels:['Batch Allocated','Not Allocated'],
+      datasets:[{ data:[batchA.length,batchNA.length], backgroundColor:['#3b82f6','#f59e0b'], borderWidth:0 }] },
+    options:{ ...CHART_DEFAULTS, cutout:'65%',
+      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
   });
 
   // ── PAYMENT SPLIT ──
-  const payOrder = ['1st EMI Paid','2nd EMI Paid','3rd EMI Paid','Total Paid','Token Only','Paid btw Token & 1st EMI','Less than Token'];
-  const payColors = ['tag-green','tag-blue','tag-purple','tag-green','tag-orange','tag-orange','tag-red'];
-  const payCount = {};
+  const payOrder  = ['1st EMI Paid','2nd EMI Paid','3rd EMI Paid','Total Paid','Token Only','Paid btw Token & 1st EMI','Less than Token'];
+  const payColors = ['#10b981','#3b82f6','#8b5cf6','#10b981','#f59e0b','#f59e0b','#ef4444'];
+  const payCount  = {};
   ay26.forEach(r => { if(r.newpayment_checks) payCount[r.newpayment_checks]=(payCount[r.newpayment_checks]||0)+1; });
-  const total = ay26.length;
-  document.getElementById('payment-grid').innerHTML = payOrder.map((p,i) => {
-    const cnt = payCount[p]||0;
+  document.getElementById('payment-grid').innerHTML = payOrder.map((p,i)=>{
+    const cnt=payCount[p]||0;
     return `<div class="payment-card">
       <div class="payment-label">${p}</div>
       <div class="payment-count">${fmt(cnt)}</div>
-      <div class="payment-pct">${pct(cnt,total)}% of total</div>
+      <div class="payment-pct">${pct(cnt,ay26.length)}% of total</div>
       <div class="progress-bar" style="margin-top:8px">
-        <div class="progress-fill" style="width:${pct(cnt,total)}%;background:${['#10b981','#3b82f6','#8b5cf6','#10b981','#f59e0b','#f59e0b','#ef4444'][i]}"></div>
+        <div class="progress-fill" style="width:${pct(cnt,ay26.length)}%;background:${payColors[i]}"></div>
       </div>
     </div>`;
   }).join('');
 
   // ── ENROLLMENT CHART ──
   const enrollCount = {};
-  ay26.forEach(r => { const e = r.ay26_enrollment_status||'Unknown'; enrollCount[e]=(enrollCount[e]||0)+1; });
+  ay26.forEach(r=>{ const e=r.ay26_enrollment_status||'Unknown'; enrollCount[e]=(enrollCount[e]||0)+1; });
   const enrollEntries = Object.entries(enrollCount).sort((a,b)=>b[1]-a[1]);
   makeChart('enrollChart', {
-    type: 'doughnut',
-    data: {
-      labels: enrollEntries.map(([k])=>k),
-      datasets: [{ data: enrollEntries.map(([,v])=>v), backgroundColor: [COLORS[3],COLORS[0],COLORS[4],COLORS[2]], borderWidth: 0 }]
-    },
-    options: { ...CHART_DEFAULTS, cutout: '60%',
-      plugins: { legend: { position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
+    type:'doughnut',
+    data:{ labels:enrollEntries.map(([k])=>k),
+      datasets:[{ data:enrollEntries.map(([,v])=>v), backgroundColor:[COLORS[3],COLORS[0],COLORS[4],COLORS[2]], borderWidth:0 }] },
+    options:{ ...CHART_DEFAULTS, cutout:'60%',
+      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
   });
 
   // ── WING CHART ──
   const wingCount = {};
-  ay26.forEach(r => { const w = r.Wing||'Unknown'; wingCount[w]=(wingCount[w]||0)+1; });
+  ay26.forEach(r=>{ const w=r.wing||r.Wing||'Unknown'; wingCount[w]=(wingCount[w]||0)+1; });
   makeChart('wingChart', {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(wingCount),
-      datasets: [{ data: Object.values(wingCount), backgroundColor: [COLORS[0],COLORS[3]], borderWidth: 0 }]
-    },
-    options: { ...CHART_DEFAULTS, cutout: '60%',
-      plugins: { legend: { position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
+    type:'doughnut',
+    data:{ labels:Object.keys(wingCount),
+      datasets:[{ data:Object.values(wingCount), backgroundColor:[COLORS[0],COLORS[3]], borderWidth:0 }] },
+    options:{ ...CHART_DEFAULTS, cutout:'60%',
+      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
   });
 
-  // SHOW
+  // ── SHOW ──
   const now = new Date();
-  document.getElementById('last-updated').textContent = `Last updated: ${now.toLocaleTimeString()}`;
-  document.getElementById('footer-time').textContent = now.toLocaleString();
-  document.getElementById('loading').style.display = 'none';
+  document.getElementById('last-updated').textContent = `Last updated: ${now.toLocaleTimeString()} — ${fmt(ay26.length)} AY26 records loaded`;
+  document.getElementById('footer-time').textContent  = now.toLocaleString();
+  document.getElementById('loading').style.display   = 'none';
   document.getElementById('dashboard').style.display = 'block';
 }
 
