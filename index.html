@@ -6,7 +6,6 @@
 <title>AY26 · East Region Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f172a'/%3E%3Crect x='4' y='4' width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='8' y='18' width='4' height='8' rx='1.5' fill='white' opacity='.9'/%3E%3Crect x='14' y='13' width='4' height='13' rx='1.5' fill='white' opacity='.9'/%3E%3Crect x='20' y='8' width='4' height='18' rx='1.5' fill='white' opacity='.9'/%3E%3C/svg%3E"/>
 <style>
 :root{
   --bg:#070b14;--bg2:#0d1425;--surface:#0f1b2d;--surface2:#142035;--surface3:#1a2a42;
@@ -15,7 +14,6 @@
   --green:#10b981;--green-l:#34d399;--orange:#f59e0b;--orange-l:#fbbf24;
   --pink:#ec4899;--red:#ef4444;--red-l:#f87171;
   --text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
-  --glow-blue:0 0 40px rgba(59,130,246,0.12);--glow-sm:0 0 20px rgba(59,130,246,0.06);
   --radius:16px;--radius-sm:10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -25,100 +23,84 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px;}
 
-/* HEADER */
 .header{background:linear-gradient(180deg,rgba(15,27,45,0.98)0%,rgba(10,16,30,0.95)100%);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.4),transparent);}
 .logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 16px rgba(59,130,246,0.35);flex-shrink:0;}
-.logo-text h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.3px;}
-.logo-text p{font-size:11px;color:var(--text3);margin-top:1px;font-weight:500;}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 16px rgba(59,130,246,0.35);}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-text p{font-size:11px;color:var(--text3);margin-top:1px;}
 .header-right{display:flex;align-items:center;gap:10px;}
-.pill{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue-l);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.3px;}
+.pill{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue-l);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;}
 .pill.green{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);color:var(--green-l);}
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.2);animation:livepulse 2s ease-in-out infinite;}
 @keyframes livepulse{0%,100%{box-shadow:0 0 0 3px rgba(16,185,129,0.2)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0.05)}}
-.refresh-btn{background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(59,130,246,0.3);transition:all 0.2s;letter-spacing:0.3px;}
+.refresh-btn{background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(59,130,246,0.3);transition:all 0.2s;}
 .refresh-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(59,130,246,0.4);}
-.refresh-btn:active{transform:translateY(0);}
 
-/* LOADING */
-#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 68px);gap:20px;}
-.loader-ring{width:52px;height:52px;position:relative;}
-.loader-ring::before,.loader-ring::after{content:'';position:absolute;inset:0;border-radius:50%;border:2.5px solid transparent;}
-.loader-ring::before{border-top-color:var(--blue);animation:spin 0.9s linear infinite;}
-.loader-ring::after{border-top-color:var(--purple);opacity:0.4;animation:spin 0.9s linear infinite reverse;inset:6px;}
-@keyframes spin{to{transform:rotate(360deg)}}
-#loading p{color:var(--text2);font-size:13px;font-weight:500;}
-
-/* LAYOUT */
-#dashboard{display:none;animation:fadein 0.4s ease;}
-@keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .container{max-width:1480px;margin:0 auto;padding:36px 40px 60px;}
-.section-label{display:flex;align-items:center;gap:12px;margin-bottom:20px;margin-top:8px;}
+.section-label{display:flex;align-items:center;gap:12px;margin-bottom:20px;margin-top:36px;}
 .section-label span{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--text3);white-space:nowrap;}
 .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);}
 
-/* KPI CARDS */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:40px;}
-.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px 18px;position:relative;overflow:hidden;cursor:default;transition:transform 0.25s cubic-bezier(.2,.8,.3,1),box-shadow 0.25s,border-color 0.2s;}
-.kpi-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4),var(--glow-blue);border-color:var(--border2);}
-.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,linear-gradient(90deg,#3b82f6,#06b6d4));}
-.kpi-card::after{content:'';position:absolute;width:90px;height:90px;border-radius:50%;background:var(--cb,rgba(59,130,246,0.08));top:-25px;right:-25px;filter:blur(22px);pointer-events:none;}
-.kpi-card[data-c="blue"]  {--kc:linear-gradient(90deg,#3b82f6,#06b6d4);--cb:rgba(59,130,246,0.15);--cv:#60a5fa;}
-.kpi-card[data-c="purple"]{--kc:linear-gradient(90deg,#8b5cf6,#ec4899);--cb:rgba(139,92,246,0.15);--cv:#a78bfa;}
-.kpi-card[data-c="green"] {--kc:linear-gradient(90deg,#10b981,#06b6d4);--cb:rgba(16,185,129,0.15);--cv:#34d399;}
-.kpi-card[data-c="teal"]  {--kc:linear-gradient(90deg,#06b6d4,#3b82f6);--cb:rgba(6,182,212,0.15);--cv:#22d3ee;}
-.kpi-card[data-c="orange"]{--kc:linear-gradient(90deg,#f59e0b,#ef4444);--cb:rgba(245,158,11,0.15);--cv:#fbbf24;}
-.kpi-card[data-c="pink"]  {--kc:linear-gradient(90deg,#ec4899,#8b5cf6);--cb:rgba(236,72,153,0.15);--cv:#f472b6;}
-.kpi-card[data-c="indigo"]{--kc:linear-gradient(90deg,#6366f1,#3b82f6);--cb:rgba(99,102,241,0.15);--cv:#818cf8;}
-.kpi-card[data-c="rose"]  {--kc:linear-gradient(90deg,#f43f5e,#ec4899);--cb:rgba(244,63,94,0.15);--cv:#fb7185;}
-.kpi-icon{font-size:17px;margin-bottom:11px;display:block;}
-.kpi-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-.kpi-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;color:var(--cv,#60a5fa);}
-.kpi-sub{font-size:10.5px;color:var(--text3);margin-top:8px;line-height:1.5;}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:14px;margin-bottom:8px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 20px 16px;position:relative;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s,border-color 0.2s;cursor:default;}
+.kpi-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.4);border-color:var(--border2);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc);}
+.kpi-card::after{content:'';position:absolute;width:90px;height:90px;border-radius:50%;background:var(--cb);top:-25px;right:-25px;filter:blur(22px);pointer-events:none;}
+.kpi-card[data-c="blue"]   {--kc:linear-gradient(90deg,#3b82f6,#06b6d4);--cb:rgba(59,130,246,0.15);--cv:#60a5fa;}
+.kpi-card[data-c="purple"] {--kc:linear-gradient(90deg,#8b5cf6,#ec4899);--cb:rgba(139,92,246,0.15);--cv:#a78bfa;}
+.kpi-card[data-c="green"]  {--kc:linear-gradient(90deg,#10b981,#06b6d4);--cb:rgba(16,185,129,0.15);--cv:#34d399;}
+.kpi-card[data-c="teal"]   {--kc:linear-gradient(90deg,#06b6d4,#3b82f6);--cb:rgba(6,182,212,0.15);--cv:#22d3ee;}
+.kpi-card[data-c="orange"] {--kc:linear-gradient(90deg,#f59e0b,#ef4444);--cb:rgba(245,158,11,0.15);--cv:#fbbf24;}
+.kpi-card[data-c="pink"]   {--kc:linear-gradient(90deg,#ec4899,#8b5cf6);--cb:rgba(236,72,153,0.15);--cv:#f472b6;}
+.kpi-card[data-c="indigo"] {--kc:linear-gradient(90deg,#6366f1,#3b82f6);--cb:rgba(99,102,241,0.15);--cv:#818cf8;}
+.kpi-card[data-c="rose"]   {--kc:linear-gradient(90deg,#f43f5e,#ec4899);--cb:rgba(244,63,94,0.15);--cv:#fb7185;}
+.kpi-icon{font-size:16px;margin-bottom:10px;display:block;}
+.kpi-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.kpi-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;color:var(--cv,#60a5fa);}
+.kpi-sub{font-size:10px;color:var(--text3);margin-top:7px;line-height:1.5;}
 
 /* GRID */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
 
 /* CARD */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--glow-sm);transition:border-color 0.2s;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:border-color 0.2s;}
 .card:hover{border-color:var(--border2);}
 .card.s2{grid-column:span 2;}
 .card.s3{grid-column:span 3;}
-.card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:3px;}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;}
 .card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
 .card-sub{font-size:10.5px;color:var(--text3);margin-bottom:16px;margin-top:3px;}
-.chip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(59,130,246,0.12);color:var(--blue-l);border:1px solid rgba(59,130,246,0.2);white-space:nowrap;}
+.chip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(59,130,246,0.12);color:var(--blue-l);border:1px solid rgba(59,130,246,0.2);white-space:nowrap;flex-shrink:0;}
 .cw{position:relative;}
-.h160{height:160px;}.h200{height:200px;}.h220{height:220px;}.h260{height:260px;}.h300{height:300px;}.h340{height:340px;}
+.h160{height:160px;}.h200{height:200px;}.h220{height:220px;}.h250{height:250px;}.h300{height:300px;}.h340{height:340px;}
 
 /* TABLE */
 .tw{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;}
 thead th{background:var(--surface2);padding:10px 13px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border2);white-space:nowrap;}
-tbody td{padding:11px 13px;font-size:12.5px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody td{padding:10px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
 tbody tr:last-child td{border-bottom:none;}
 tbody tr:hover td{background:rgba(59,130,246,0.03);}
 .tc{text-align:center;}
 
 /* TAGS */
 .tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10.5px;font-weight:600;}
-.tag-blue  {background:rgba(59,130,246,0.12); color:#60a5fa; border:1px solid rgba(59,130,246,0.2);}
-.tag-green {background:rgba(16,185,129,0.12); color:#34d399; border:1px solid rgba(16,185,129,0.2);}
-.tag-purple{background:rgba(139,92,246,0.12); color:#a78bfa; border:1px solid rgba(139,92,246,0.2);}
-.tag-orange{background:rgba(245,158,11,0.12); color:#fbbf24; border:1px solid rgba(245,158,11,0.2);}
-.tag-red   {background:rgba(239,68,68,0.12);  color:#f87171; border:1px solid rgba(239,68,68,0.2);}
-.tag-teal  {background:rgba(6,182,212,0.12);  color:#22d3ee; border:1px solid rgba(6,182,212,0.2);}
-.tag-gray  {background:rgba(100,116,139,0.12);color:#94a3b8; border:1px solid rgba(100,116,139,0.2);}
+.tag-blue  {background:rgba(59,130,246,0.12);color:#60a5fa;border:1px solid rgba(59,130,246,0.2);}
+.tag-green {background:rgba(16,185,129,0.12);color:#34d399;border:1px solid rgba(16,185,129,0.2);}
+.tag-purple{background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);}
+.tag-orange{background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);}
+.tag-red   {background:rgba(239,68,68,0.12); color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+.tag-teal  {background:rgba(6,182,212,0.12); color:#22d3ee;border:1px solid rgba(6,182,212,0.2);}
 
 /* PROGRESS */
 .bar{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:5px;}
-.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#06b6d4);transition:width 0.8s cubic-bezier(.2,.8,.3,1);}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#06b6d4);}
 
 /* PAYMENT */
-.pay-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:40px;}
+.pay-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:40px;}
 .pay-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;transition:transform 0.2s,border-color 0.2s;}
 .pay-card:hover{transform:translateY(-2px);border-color:var(--border2);}
 .pay-label{font-size:9.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
@@ -126,12 +108,12 @@ tbody tr:hover td{background:rgba(59,130,246,0.03);}
 .pay-pct{font-size:10px;color:var(--text3);margin-top:2px;}
 
 /* FUNNEL */
-.funnel{display:flex;flex-direction:column;gap:8px;padding:4px 0;}
+.funnel{display:flex;flex-direction:column;gap:9px;padding:4px 0;}
 .f-row{display:flex;align-items:center;gap:10px;}
-.f-lbl{font-size:11px;color:var(--text2);width:175px;flex-shrink:0;font-weight:500;}
-.f-bw{flex:1;background:var(--surface3);border-radius:4px;overflow:hidden;height:24px;}
+.f-lbl{font-size:11px;color:var(--text2);width:185px;flex-shrink:0;font-weight:500;}
+.f-bw{flex:1;background:var(--surface3);border-radius:4px;overflow:hidden;height:26px;}
 .f-bf{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px;font-size:10.5px;font-weight:700;transition:width 1s cubic-bezier(.2,.8,.3,1);}
-.f-num{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);width:55px;text-align:right;flex-shrink:0;}
+.f-num{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);width:58px;text-align:right;flex-shrink:0;}
 
 /* STAT ROW */
 .stat-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
@@ -139,26 +121,11 @@ tbody tr:hover td{background:rgba(59,130,246,0.03);}
 .s-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-top:1px;}
 .s-sub{font-size:10px;color:var(--text3);}
 
-/* ERROR */
-.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:20px 24px;color:#f87171;font-size:13px;line-height:1.7;}
-
-/* FOOTER */
-.footer{text-align:center;padding:28px 40px;color:var(--text3);font-size:11px;letter-spacing:0.3px;border-top:1px solid var(--border);}
+.footer{text-align:center;padding:28px 40px;color:var(--text3);font-size:11px;border-top:1px solid var(--border);margin-top:20px;}
 .footer span{color:var(--text2);}
 
-/* RESPONSIVE */
-@media(max-width:1100px){
-  .g3{grid-template-columns:1fr 1fr;}
-  .g3 .card:last-child{grid-column:span 2;}
-  .g4{grid-template-columns:1fr 1fr;}
-}
-@media(max-width:780px){
-  .g2,.g3,.g4{grid-template-columns:1fr;}
-  .g3 .card:last-child,.card.s2,.card.s3{grid-column:1;}
-  .container{padding:20px 16px 48px;}
-  .header{padding:0 16px;}
-  .logo-text p{display:none;}
-}
+@media(max-width:1100px){.g3{grid-template-columns:1fr 1fr;}.g3 .s3{grid-column:span 2;}}
+@media(max-width:780px){.g2,.g3{grid-template-columns:1fr;}.card.s2,.card.s3{grid-column:1;}.container{padding:20px 16px 48px;}.header{padding:0 16px;}}
 </style>
 </head>
 <body>
@@ -168,58 +135,48 @@ tbody tr:hover td{background:rgba(59,130,246,0.03);}
     <div class="logo-icon">📊</div>
     <div class="logo-text">
       <h1>East Region · AY26 Dashboard</h1>
-      <p id="last-updated">Loading data…</p>
+      <p id="last-updated">Data loaded · 28 Mar 2026, 11:37 AM</p>
     </div>
   </div>
   <div class="header-right">
     <div class="live-dot"></div>
     <span class="pill">AY 2025–26</span>
-    <span class="pill green" id="row-pill">—</span>
-    <button class="refresh-btn" onclick="loadData()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-      Refresh
-    </button>
+    <span class="pill green" id="row-pill">11,429 Students</span>
   </div>
 </header>
 
-<div id="loading">
-  <div class="loader-ring"></div>
-  <p id="loading-msg">Fetching live data from Google Sheets…</p>
-</div>
-
-<div id="dashboard">
 <div class="container">
 
   <div class="section-label"><span>Overview KPIs</span></div>
   <div class="kpi-grid" id="kpi-grid"></div>
 
-  <div class="section-label"><span>Registration Funnel &amp; Enrollment</span></div>
-  <div class="g2" style="margin-bottom:40px">
+  <div class="section-label"><span>Registration Funnel &amp; Enrollment Distribution</span></div>
+  <div class="g2">
     <div class="card">
       <div class="card-head"><div class="card-title">Registration Funnel</div><span class="chip">AY26</span></div>
-      <div class="card-sub">Step-by-step from total students → batch allotted</div>
+      <div class="card-sub">Step-by-step: Total → Registered → Eligible → Batch Allotted</div>
       <div class="funnel" id="funnel"></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title">Enrollment Status Distribution</div></div>
-      <div class="card-sub">All AY26 students by enrollment type</div>
-      <div class="cw h260"><canvas id="enrollChart"></canvas></div>
+      <div class="card-sub">AY26 students by enrollment type</div>
+      <div class="cw h250"><canvas id="enrollChart"></canvas></div>
     </div>
   </div>
 
   <div class="section-label"><span>Center-wise Performance</span></div>
-  <div class="card" style="padding:0;margin-bottom:40px">
-    <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <div><div class="card-title">Center-wise Admission Summary</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px">All metrics computed per center using exact business rules</div></div>
-      <span class="chip" id="center-chip"></span>
+  <div class="card" style="padding:0;margin-bottom:8px;">
+    <div style="padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div><div class="card-title">Center-wise Admission Summary</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px;">All metrics per exact business rules — eligibility from eligibility_status col, ARPU where arpu_check=Yes</div></div>
+      <span class="chip">21 Centers</span>
     </div>
     <div class="tw">
       <table>
         <thead><tr>
           <th>Center</th><th>Total</th>
-          <th>Reg. w/ Free</th><th>Adm. w/ Free</th>
-          <th>Reg. w/o Free</th><th>Adm. w/o Free</th>
-          <th>Retained</th><th>Less than Reg.</th>
+          <th>Reg w/ Free</th><th>Adm w/ Free</th>
+          <th>Reg w/o Free</th><th>Adm w/o Free</th>
+          <th>Retained</th><th>Less than Reg</th>
           <th>Eligible</th><th>Batch Allotted</th>
           <th>Fresh ARPU</th><th>Collection %</th>
         </tr></thead>
@@ -229,44 +186,44 @@ tbody tr:hover td{background:rgba(59,130,246,0.03);}
   </div>
 
   <div class="section-label"><span>ARPU Analysis</span></div>
-  <div class="g3" style="margin-bottom:40px">
+  <div class="g3">
     <div class="card">
       <div class="card-head"><div class="card-title">Fresh ARPU</div><span class="chip">paid only</span></div>
-      <div class="card-sub">Avg arpu · fresh (w/o free) · arpu_check = Yes</div>
+      <div class="card-sub">avg(arpu) · fresh · paid · arpu_check=Yes</div>
       <div class="cw h160"><canvas id="freshArpuChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title">Blended ARPU</div><span class="chip">paid only</span></div>
-      <div class="card-sub">Avg arpu · fresh + retained (w/o free) · arpu_check = Yes</div>
+      <div class="card-sub">avg(arpu) · fresh + retained · paid · arpu_check=Yes</div>
       <div class="cw h160"><canvas id="blendedArpuChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title">Class-wise Fresh ARPU</div></div>
-      <div class="card-sub">Fresh ARPU per class / course</div>
+      <div class="card-sub">Fresh paid ARPU per class / course</div>
       <div class="cw h160"><canvas id="arpuClassChart"></canvas></div>
     </div>
     <div class="card s3">
       <div class="card-head"><div class="card-title">Center-wise Fresh ARPU</div></div>
-      <div class="card-sub">Top centers — fresh paid ARPU (arpu_check = Yes)</div>
+      <div class="card-sub">avg(arpu) per center — fresh, paid, arpu_check=Yes</div>
       <div class="cw h220"><canvas id="arpuCenterChart"></canvas></div>
     </div>
   </div>
 
   <div class="section-label"><span>Fee Collection</span></div>
-  <div class="g2" style="margin-bottom:16px">
+  <div class="g2" style="margin-bottom:16px;">
     <div class="card">
-      <div class="card-head"><div class="card-title">Billed vs Collected (Top 15)</div></div>
+      <div class="card-head"><div class="card-title">Billed vs Collected</div></div>
       <div class="card-sub">Total fees billed vs amount collected per center</div>
       <div class="cw h300"><canvas id="feeChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title">Collection Rate by Center</div></div>
-      <div class="card-sub">% of fees collected — green ≥ 80%, amber ≥ 50%, red &lt; 50%</div>
+      <div class="card-sub">sum(fees_paid) / sum(fees_amt) — green ≥80%, amber ≥50%, red &lt;50%</div>
       <div class="cw h300"><canvas id="feeRateChart"></canvas></div>
     </div>
   </div>
-  <div class="card" style="padding:0;margin-bottom:40px">
-    <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+  <div class="card" style="padding:0;margin-bottom:8px;">
+    <div style="padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
       <div class="card-title">Fee Collection Detail</div><span class="chip">Center-wise</span>
     </div>
     <div class="tw">
@@ -280,22 +237,22 @@ tbody tr:hover td{background:rgba(59,130,246,0.03);}
   <div class="section-label"><span>Payment Stage Split</span></div>
   <div class="pay-grid" id="payment-grid"></div>
 
-  <div class="section-label" style="margin-top:12px"><span>Admission Trends</span></div>
-  <div class="g2" style="margin-bottom:40px">
+  <div class="section-label"><span>Admission Trends</span></div>
+  <div class="g2">
     <div class="card">
       <div class="card-head"><div class="card-title">Month-wise Admissions</div></div>
-      <div class="card-sub">AY26 admissions trend by month (Apr → Mar)</div>
-      <div class="cw h240"><canvas id="monthChart"></canvas></div>
+      <div class="card-sub">AY26 admission count by month (Apr → Mar)</div>
+      <div class="cw h250"><canvas id="monthChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title">Day-of-month Trend</div></div>
       <div class="card-sub">Admissions distributed by day number</div>
-      <div class="cw h240"><canvas id="dayChart"></canvas></div>
+      <div class="cw h250"><canvas id="dayChart"></canvas></div>
     </div>
   </div>
 
   <div class="section-label"><span>Course, Board &amp; Wing</span></div>
-  <div class="g3" style="margin-bottom:40px">
+  <div class="g3">
     <div class="card">
       <div class="card-title">Class / Course Split</div>
       <div class="card-sub">Students by class or course type</div>
@@ -314,329 +271,202 @@ tbody tr:hover td{background:rgba(59,130,246,0.03);}
   </div>
 
   <div class="section-label"><span>Eligibility &amp; Batch Allocation</span></div>
-  <div class="g2" style="margin-bottom:48px">
+  <div class="g2">
     <div class="card">
       <div class="card-head"><div class="card-title">Eligibility Status</div></div>
-      <div class="card-sub">Among fresh registrations — eligible vs not eligible for batch</div>
+      <div class="card-sub">Among fresh registrations — eligible vs not eligible</div>
       <div class="cw h220"><canvas id="eligChart"></canvas></div>
       <div class="stat-row" id="elig-stats"></div>
     </div>
     <div class="card">
-      <div class="card-head"><div class="card-title">Batch Allocation Status</div></div>
-      <div class="card-sub">Among eligible students — allotted vs pending allocation</div>
+      <div class="card-head"><div class="card-title">Batch Allocation</div></div>
+      <div class="card-sub">Among eligible students — allotted vs pending</div>
       <div class="cw h220"><canvas id="batchChart"></canvas></div>
       <div class="stat-row" id="batch-stats"></div>
     </div>
   </div>
 
 </div>
+
 <div class="footer">
-  AY26 East Region Dashboard &nbsp;·&nbsp; Live via Google Apps Script &nbsp;·&nbsp; <span id="footer-time">—</span>
-</div>
+  AY26 East Region Dashboard &nbsp;·&nbsp; East Region &nbsp;·&nbsp;
+  <span>28 Mar 2026</span>
 </div>
 
 <script>
-const APPS_URL='https://script.google.com/macros/s/AKfycbzXgTqB73GbVG20zc3aWOmTj0kobuJXEt92jA0EeCJ4nNG1TPW0o86kWbKdIepgrECZ/exec';
-const MONTHS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const D = {"kpis": {"total": 11429, "reg_wf": 11096, "adm_wf": 6100, "reg_wof": 10988, "adm_wof": 5992, "ltr": 333, "retained": 3900, "eligible": 5981, "bat_allot": 4667, "fresh_arpu": 59247.29, "blended_arpu": 58142.13, "tot_bill": 1161656781.93, "tot_coll": 336062554.93, "coll_pct": 28.9, "fresh_arpu_n": 10917, "blended_arpu_n": 14610}, "centers": [{"name": "Kolkata - NewTown Vidyapeeth", "total": 1376, "reg_wf": 1334, "adm_wf": 782, "reg_wof": 1330, "adm_wof": 778, "retained": 563, "ltr": 42, "eligible": 777, "bat_allot": 764, "fresh_arpu": 69741.1, "fees_amt": 164180638.69, "fees_paid": 49335577.04, "coll_pct": 30.0}, {"name": "Kolkata - Gariahat Vidyapeeth", "total": 1296, "reg_wf": 1254, "adm_wf": 956, "reg_wof": 1234, "adm_wof": 936, "retained": 626, "ltr": 42, "eligible": 952, "bat_allot": 890, "fresh_arpu": 62780.74, "fees_amt": 143174526.95, "fees_paid": 49614080.0, "coll_pct": 34.7}, {"name": "Bhubaneswar Vidyapeeth", "total": 1054, "reg_wf": 1020, "adm_wf": 493, "reg_wof": 1004, "adm_wof": 477, "retained": 524, "ltr": 34, "eligible": 482, "bat_allot": 329, "fresh_arpu": 57388.02, "fees_amt": 108979185.75, "fees_paid": 28185039.72, "coll_pct": 25.9}, {"name": "Durgapur Vidyapeeth", "total": 990, "reg_wf": 979, "adm_wf": 588, "reg_wof": 965, "adm_wof": 574, "retained": 497, "ltr": 11, "eligible": 588, "bat_allot": 372, "fresh_arpu": 58572.25, "fees_amt": 103201570.84, "fees_paid": 28835037.43, "coll_pct": 27.9}, {"name": "Guwahati Vidyapeeth", "total": 873, "reg_wf": 816, "adm_wf": 395, "reg_wof": 808, "adm_wof": 387, "retained": 382, "ltr": 57, "eligible": 384, "bat_allot": 315, "fresh_arpu": 70765.2, "fees_amt": 108357783.84, "fees_paid": 27681000.4, "coll_pct": 25.5}, {"name": "Kolkata - Barrackpore Vidyapeeth", "total": 855, "reg_wf": 840, "adm_wf": 660, "reg_wof": 836, "adm_wof": 656, "retained": 399, "ltr": 15, "eligible": 658, "bat_allot": 553, "fresh_arpu": 57801.14, "fees_amt": 87958888.09, "fees_paid": 34117817.45, "coll_pct": 38.8}, {"name": "Siliguri Vidyapeeth", "total": 750, "reg_wf": 726, "adm_wf": 351, "reg_wof": 724, "adm_wof": 349, "retained": 283, "ltr": 24, "eligible": 348, "bat_allot": 147, "fresh_arpu": 60894.19, "fees_amt": 79335486.31, "fees_paid": 20914583.85, "coll_pct": 26.4}, {"name": "Kharagpur Vidyapeeth", "total": 573, "reg_wf": 566, "adm_wf": 292, "reg_wof": 561, "adm_wof": 287, "retained": 220, "ltr": 7, "eligible": 288, "bat_allot": 224, "fresh_arpu": 51717.55, "fees_amt": 49448628.74, "fees_paid": 16435778.08, "coll_pct": 33.2}, {"name": "Bhubaneswar - Chandrasekharpur Vidyapeeth", "total": 533, "reg_wf": 526, "adm_wf": 184, "reg_wof": 515, "adm_wof": 173, "retained": 166, "ltr": 7, "eligible": 176, "bat_allot": 112, "fresh_arpu": 56579.5, "fees_amt": 49266300.4, "fees_paid": 10779860.47, "coll_pct": 21.9}, {"name": "Malda Vidyapeeth", "total": 493, "reg_wf": 486, "adm_wf": 163, "reg_wof": 484, "adm_wof": 161, "retained": 93, "ltr": 7, "eligible": 159, "bat_allot": 132, "fresh_arpu": 47914.25, "fees_amt": 38179323.38, "fees_paid": 9046018.78, "coll_pct": 23.7}, {"name": "Kolkata - Baruipur Vidyapeeth", "total": 452, "reg_wf": 450, "adm_wf": 261, "reg_wof": 450, "adm_wof": 261, "retained": 93, "ltr": 2, "eligible": 258, "bat_allot": 234, "fresh_arpu": 52314.88, "fees_amt": 37585499.51, "fees_paid": 12705407.56, "coll_pct": 33.8}, {"name": "Agartala Vidyapeeth", "total": 372, "reg_wf": 367, "adm_wf": 154, "reg_wof": 365, "adm_wof": 152, "retained": 0, "ltr": 5, "eligible": 154, "bat_allot": 37, "fresh_arpu": 58929.32, "fees_amt": 36056701.7, "fees_paid": 8619222.97, "coll_pct": 23.9}, {"name": "Bankura - Katjuridanga Tuition Center", "total": 315, "reg_wf": 313, "adm_wf": 235, "reg_wof": 312, "adm_wof": 234, "retained": 2, "ltr": 2, "eligible": 233, "bat_allot": 216, "fresh_arpu": 30841.75, "fees_amt": 13714488.81, "fees_paid": 6831373.24, "coll_pct": 49.8}, {"name": "Bardhaman Vidyapeeth", "total": 311, "reg_wf": 307, "adm_wf": 176, "reg_wof": 288, "adm_wof": 157, "retained": 22, "ltr": 4, "eligible": 174, "bat_allot": 168, "fresh_arpu": 47139.76, "fees_amt": 22557964.98, "fees_paid": 8420396.21, "coll_pct": 37.3}, {"name": "Alipurduar - Samuktala Road Vidyapeeth", "total": 223, "reg_wf": 215, "adm_wf": 90, "reg_wof": 215, "adm_wof": 90, "retained": 0, "ltr": 8, "eligible": 74, "bat_allot": 0, "fresh_arpu": 58936.2, "fees_amt": 20918169.89, "fees_paid": 5463967.94, "coll_pct": 26.1}, {"name": "Howrah Vidyapeeth", "total": 220, "reg_wf": 211, "adm_wf": 62, "reg_wof": 211, "adm_wof": 62, "retained": 0, "ltr": 9, "eligible": 61, "bat_allot": 61, "fresh_arpu": 63241.59, "fees_amt": 25117395.03, "fees_paid": 4043165.93, "coll_pct": 16.1}, {"name": "Kalyani Tuition Center", "total": 216, "reg_wf": 214, "adm_wf": 155, "reg_wof": 214, "adm_wof": 155, "retained": 0, "ltr": 2, "eligible": 154, "bat_allot": 113, "fresh_arpu": 40610.99, "fees_amt": 13571585.2, "fees_paid": 5195601.63, "coll_pct": 38.3}, {"name": "Itanagar - F Sector Vidyapeeth", "total": 198, "reg_wf": 185, "adm_wf": 49, "reg_wof": 185, "adm_wof": 49, "retained": 0, "ltr": 13, "eligible": 22, "bat_allot": 0, "fresh_arpu": 74442.64, "fees_amt": 24215882.59, "fees_paid": 4772868.09, "coll_pct": 19.7}, {"name": "Kolkata - Behala Vidyapeeth", "total": 191, "reg_wf": 183, "adm_wf": 32, "reg_wof": 183, "adm_wof": 32, "retained": 0, "ltr": 8, "eligible": 31, "bat_allot": 0, "fresh_arpu": 63881.32, "fees_amt": 21728399.33, "fees_paid": 3184981.34, "coll_pct": 14.7}, {"name": "Imphal - Babupara Vidyapeeth", "total": 125, "reg_wf": 91, "adm_wf": 22, "reg_wof": 91, "adm_wof": 22, "retained": 0, "ltr": 34, "eligible": 8, "bat_allot": 0, "fresh_arpu": 71832.29, "fees_amt": 12680456.29, "fees_paid": 1788776.8, "coll_pct": 14.1}, {"name": "Guwahati - Adabari Vidyapeeth", "total": 13, "reg_wf": 13, "adm_wf": 0, "reg_wof": 13, "adm_wof": 0, "retained": 0, "ltr": 0, "eligible": 0, "bat_allot": 0, "fresh_arpu": 73133.24, "fees_amt": 1427905.61, "fees_paid": 92000.0, "coll_pct": 6.4}], "months": [{"m": "Aug", "n": 4}, {"m": "Sep", "n": 922}, {"m": "Oct", "n": 868}, {"m": "Nov", "n": 1269}, {"m": "Dec", "n": 1870}, {"m": "Jan", "n": 1742}, {"m": "Feb", "n": 1782}, {"m": "Mar", "n": 2972}], "days": [{"d": 1, "n": 246}, {"d": 2, "n": 296}, {"d": 3, "n": 210}, {"d": 4, "n": 224}, {"d": 5, "n": 295}, {"d": 6, "n": 294}, {"d": 7, "n": 364}, {"d": 8, "n": 379}, {"d": 9, "n": 381}, {"d": 10, "n": 436}, {"d": 11, "n": 354}, {"d": 12, "n": 356}, {"d": 13, "n": 383}, {"d": 14, "n": 533}, {"d": 15, "n": 520}, {"d": 16, "n": 337}, {"d": 17, "n": 311}, {"d": 18, "n": 409}, {"d": 19, "n": 373}, {"d": 20, "n": 476}, {"d": 21, "n": 437}, {"d": 22, "n": 373}, {"d": 23, "n": 361}, {"d": 24, "n": 378}, {"d": 25, "n": 486}, {"d": 26, "n": 401}, {"d": 27, "n": 440}, {"d": 28, "n": 428}, {"d": 29, "n": 256}, {"d": 30, "n": 299}, {"d": 31, "n": 393}], "classes": [{"name": "11th JEE", "n": 2528}, {"name": "10th", "n": 1812}, {"name": "9th", "n": 1790}, {"name": "11th NEET", "n": 1673}, {"name": "Dropper NEET", "n": 1216}, {"name": "8th", "n": 849}, {"name": "12th JEE", "n": 593}, {"name": "12th NEET", "n": 492}, {"name": "Dropper JEE", "n": 453}, {"name": "7th", "n": 23}], "boards": [{"name": "CBSE", "n": 6062}, {"name": "State Board", "n": 1955}, {"name": "ICSE", "n": 1481}, {"name": "Others", "n": 109}], "payments": [{"name": "1st EMI Paid", "n": 4893}, {"name": "2nd EMI Paid", "n": 84}, {"name": "3rd EMI Paid", "n": 2}, {"name": "Total Paid", "n": 1121}, {"name": "Token Only", "n": 2629}, {"name": "Paid btw Token & 1st EMI", "n": 979}, {"name": "Less than Token", "n": 1721}], "wings": [{"name": "Foundation", "n": 4451}, {"name": "Senior wing", "n": 6978}], "enrollments": [{"name": "Admission", "n": 6100}, {"name": "Registration Only", "n": 4996}, {"name": "Less than Registration", "n": 333}], "class_arpu": [{"name": "Dropper NEET", "arpu": 81517.47}, {"name": "Dropper JEE", "arpu": 81426.89}, {"name": "12th JEE", "arpu": 79690.76}, {"name": "12th NEET", "arpu": 75867.41}, {"name": "11th NEET", "arpu": 68560.29}, {"name": "11th JEE", "arpu": 68174.58}, {"name": "10th", "arpu": 39901.4}, {"name": "9th", "arpu": 38638.81}, {"name": "8th", "arpu": 37555.95}, {"name": "7th", "arpu": 31998.36}], "eligible_n": 5981, "not_elig_n": 5115, "bat_allot_n": 4667, "bat_pend_n": 1314, "reg_wf_n": 11096};
+
 const C=['#3b82f6','#8b5cf6','#10b981','#f59e0b','#06b6d4','#ec4899','#f97316','#6366f1','#14b8a6','#a855f7','#22d3ee','#84cc16','#fb923c','#4ade80','#818cf8','#f472b6','#2dd4bf','#facc15','#c084fc','#60a5fa'];
-let CH={};
 
-const fmt =(n)=>isNaN(n)?'—':Math.round(n).toLocaleString('en-IN');
-const fmtC=(n)=>'₹'+fmt(n);
-const fmtK=(n)=>n>=1e7?'₹'+(n/1e7).toFixed(2)+'Cr':n>=1e5?'₹'+(n/1e5).toFixed(1)+'L':fmtC(n);
-const avg =(a)=>a.length?a.reduce((s,v)=>s+v,0)/a.length:0;
-const pct =(a,b)=>b?((a/b)*100).toFixed(1):'0.0';
-const pctN=(a,b)=>b?+((a/b)*100).toFixed(1):0;
+const fmt  = n => isNaN(n) ? '—' : Math.round(n).toLocaleString('en-IN');
+const fmtC = n => '₹' + fmt(n);
+const fmtK = n => n>=1e7 ? '₹'+(n/1e7).toFixed(2)+'Cr' : n>=1e5 ? '₹'+(n/1e5).toFixed(1)+'L' : fmtC(n);
+const pct  = (a,b) => b ? ((a/b)*100).toFixed(1) : '0.0';
+const pctN = (a,b) => b ? +((a/b)*100).toFixed(1) : 0;
 
+let CH = {};
 function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function mc(id,cfg){dc(id);const el=document.getElementById(id);if(!el)return;CH[id]=new Chart(el.getContext('2d'),cfg);}
 
-const DEF={responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{labels:{color:'#64748b',font:{size:11,family:'Inter'},boxWidth:10,padding:14}}}};
-const SC=()=>({
+const DEF = {responsive:true,maintainAspectRatio:false};
+const SC  = ()=>({
   x:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'}},
   y:{ticks:{color:'#475569',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'}}
 });
+const LL  = {legend:{display:false}};
+const LB  = {legend:{position:'bottom',labels:{color:'#64748b',font:{size:10},boxWidth:10,padding:10}}};
+const LR  = {legend:{position:'right',labels:{color:'#64748b',font:{size:10},boxWidth:10,padding:10}}};
+const RTIP= {tooltip:{callbacks:{label:ctx=>' ₹'+Math.round(ctx.raw).toLocaleString('en-IN')}}};
 
-async function loadData(){
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('dashboard').style.display='none';
-  let rows;
-  try{
-    const res=await fetch(APPS_URL,{redirect:'follow'});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const txt=await res.text();
-    const clean=txt.replace(/^\/\*\*\/[^(]*\(/,'').replace(/\);?\s*$/,'').trim();
-    rows=JSON.parse(clean.startsWith('[')?clean:txt);
-    if(!Array.isArray(rows)) throw new Error('Not an array');
-  }catch(e){
-    document.getElementById('loading').innerHTML=`<div style="text-align:center"><div style="font-size:40px;margin-bottom:16px">⚠️</div><div class="err" style="max-width:520px;margin:0 auto;text-align:left"><strong>Could not load data</strong><br><br>${e.message}<br><br>Ensure Apps Script is deployed: Execute as Me · Who has access: Anyone</div><button onclick="loadData()" style="margin-top:20px;background:#3b82f6;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">↻ Retry</button></div>`;
-    return;
-  }
-  build(rows);
-}
+(function render(){
+  const k = D.kpis;
 
-function build(rows){
-  const norm=rows.map(r=>{const o={};Object.keys(r).forEach(k=>{o[k.trim().toLowerCase().replace(/\s+/g,'_')]=String(r[k]||'').trim();});return o;});
-  const all=norm.filter(r=>r.acad_year==='AY26');
-  if(!all.length){
-    document.getElementById('loading').innerHTML=`<div class="err" style="max-width:480px;margin:40px auto">No AY26 rows. Columns found: ${Object.keys(norm[0]||{}).join(', ')}</div>`;
-    return;
-  }
-
-  // ── BUSINESS LOGIC ─────────────────────────────────────────────────────────
-  // Helpers
-  const isFresh  =r=>['Admission','Registration Only'].includes(r.ay26_enrollment_status);
-  const isAdm    =r=>r.ay26_enrollment_status==='Admission';
-  const isPaid   =r=>r.free_admission.toUpperCase()==='FALSE';
-  const isRet    =r=>r.ay26_enrollment_status==='Retained';
-  const isLTR    =r=>r.ay26_enrollment_status==='Less than Registration';
-  const isArpu   =r=>r.arpu_check.toLowerCase()==='yes';
-  const arpuVal  =r=>parseFloat(r.arpu||0);
-
-  // Segments (exact per spec)
-  const regWF   =all.filter(isFresh);                                     // Total Reg w/ free
-  const admWF   =all.filter(isAdm);                                       // Total Adm w/ free
-  const regWoF  =all.filter(r=>isFresh(r)&&isPaid(r));                    // Total Reg w/o free
-  const admWoF  =all.filter(r=>isAdm(r)&&isPaid(r));                      // Total Adm w/o free
-  const eligible=all.filter(r=>isFresh(r)&&r.eligibility_status==='Eligible'); // Eligible
-  const notElig =all.filter(r=>isFresh(r)&&r.eligibility_status!=='Eligible');
-  const isAllot =r=>isFresh(r)&&r.eligibility_status==='Eligible'&&r.batch&&r.batch.trim()!==''&&r.batch.trim().toLowerCase()!=='no batch';
-  const batAllot=all.filter(isAllot);                                      // Batch allotted
-  const batPend =eligible.filter(r=>!isAllot(r));
-  const retained=all.filter(isRet);
-  const ltrAll  =all.filter(isLTR);
-
-  // Fresh ARPU: avg(arpu) | arpu_check=Yes & fresh & paid
-  const fArpuV=all.filter(r=>isArpu(r)&&isFresh(r)&&isPaid(r)).map(arpuVal).filter(v=>v>0);
-  const freshArpu=avg(fArpuV);
-
-  // Blended ARPU: avg(arpu) | arpu_check=Yes & (fresh|retained) & paid
-  const bArpuV=all.filter(r=>isArpu(r)&&(isFresh(r)||isRet(r))&&isPaid(r)).map(arpuVal).filter(v=>v>0);
-  const blendArpu=avg(bArpuV);
-
-  // Collection % = sum(fees_paid) / sum(fees_amt)
-  const totBill=all.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-  const totColl=all.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-  const collPct=pctN(totColl,totBill);
-
-  // Payment split
-  const PL=['1st EMI Paid','2nd EMI Paid','3rd EMI Paid','Total Paid','Token Only','Paid btw Token & 1st EMI','Less than Token'];
-  const PC=['#10b981','#3b82f6','#8b5cf6','#22d3ee','#f59e0b','#f97316','#ef4444'];
-  const pCnt={};PL.forEach(p=>pCnt[p]=0);
-  all.forEach(r=>{if(r.newpayment_checks&&pCnt.hasOwnProperty(r.newpayment_checks))pCnt[r.newpayment_checks]++;});
-
-  // Centers
-  const cMap={};
-  all.forEach(r=>{const c=r.center||'Unknown';if(!cMap[c])cMap[c]=[];cMap[c].push(r);});
-  const centers=Object.entries(cMap).sort((a,b)=>b[1].length-a[1].length);
-
-  // ── KPI CARDS ──────────────────────────────────────────────────────────────
+  // ── KPI CARDS ───────────────────────────────────────────────────────────────
   const kpis=[
-    {c:'blue',   ic:'👥',lbl:'Total AY26 Students',      val:fmt(all.length),           sub:`${centers.length} active centers`},
-    {c:'green',  ic:'📋',lbl:'Total Reg. w/ Free',       val:fmt(regWF.length),          sub:'fresh (Admission + Reg. Only)'},
-    {c:'teal',   ic:'🎟️',lbl:'Total Adm. w/ Free',      val:fmt(admWF.length),          sub:'ay26_status = Admission only'},
-    {c:'purple', ic:'💳',lbl:'Total Reg. w/o Free',      val:fmt(regWoF.length),         sub:'fresh & free_admission = FALSE'},
-    {c:'indigo', ic:'🎓',lbl:'Total Adm. w/o Free',      val:fmt(admWoF.length),         sub:'Admission & free_admission = FALSE'},
-    {c:'green',  ic:'✅',lbl:'Eligible for Batch',       val:fmt(eligible.length),       sub:`${pct(eligible.length,regWF.length)}% of fresh registrations`},
-    {c:'blue',   ic:'🗂️',lbl:'Batch Allotted',           val:fmt(batAllot.length),       sub:`${pct(batAllot.length,eligible.length)}% of eligible`},
-    {c:'orange', ic:'📈',lbl:'Fresh ARPU',               val:'₹'+fmt(freshArpu),         sub:`${fmt(fArpuV.length)} students · paid only`},
-    {c:'pink',   ic:'🔄',lbl:'Blended ARPU',             val:'₹'+fmt(blendArpu),         sub:`Fresh + Retained · paid only`},
-    {c:'rose',   ic:'💰',lbl:'Fee Collection %',         val:collPct.toFixed(1)+'%',     sub:`${fmtK(totColl)} of ${fmtK(totBill)}`},
-    {c:'teal',   ic:'🔁',lbl:'Retained',                 val:fmt(retained.length),       sub:`${pct(retained.length,all.length)}% of total`},
-    {c:'orange', ic:'⬇️',lbl:'Less than Registration',  val:fmt(ltrAll.length),         sub:'Downgraded enrollment status'},
+    {c:'blue',   ic:'👥', lbl:'Total AY26 Students',      val:fmt(k.total),             sub:`${D.centers.length} active centers`},
+    {c:'green',  ic:'📋', lbl:'Total Reg. w/ Free',       val:fmt(k.reg_wf),             sub:'Admission + Registration Only'},
+    {c:'teal',   ic:'🎓', lbl:'Total Adm. w/ Free',       val:fmt(k.adm_wf),             sub:'ay26_status = Admission only'},
+    {c:'purple', ic:'💳', lbl:'Total Reg. w/o Free',      val:fmt(k.reg_wof),            sub:'Fresh & free_admission = FALSE'},
+    {c:'indigo', ic:'🏫', lbl:'Total Adm. w/o Free',      val:fmt(k.adm_wof),            sub:'Admission & free_admission = FALSE'},
+    {c:'orange', ic:'🔁', lbl:'2yr Retention',            val:fmt(k.retained),           sub:`${pct(k.retained,k.total)}% retained from prior years`},
+    {c:'green',  ic:'✅', lbl:'Eligible for Batch',       val:fmt(k.eligible),           sub:`${pct(k.eligible,k.reg_wf)}% of fresh registrations`},
+    {c:'blue',   ic:'🗂️', lbl:'Batch Allotted',           val:fmt(k.bat_allot),          sub:`${pct(k.bat_allot,k.eligible)}% of eligible`},
+    {c:'orange', ic:'📈', lbl:'Fresh ARPU',               val:'₹'+fmt(k.fresh_arpu),     sub:`${fmt(k.fresh_arpu_n)} students · paid · arpu_check=Yes`},
+    {c:'pink',   ic:'🔄', lbl:'Blended ARPU',             val:'₹'+fmt(k.blended_arpu),   sub:`Fresh + Retained · paid · arpu_check=Yes`},
+    {c:'rose',   ic:'💰', lbl:'Fee Collection %',         val:k.coll_pct.toFixed(1)+'%', sub:`${fmtK(k.tot_coll)} of ${fmtK(k.tot_bill)}`},
+    {c:'orange', ic:'⬇️', lbl:'Less than Registration',  val:fmt(k.ltr),                sub:'Downgraded enrollment status'},
   ];
-  document.getElementById('kpi-grid').innerHTML=kpis.map(k=>`
-    <div class="kpi-card" data-c="${k.c}">
-      <span class="kpi-icon">${k.ic}</span>
-      <div class="kpi-label">${k.lbl}</div>
-      <div class="kpi-value">${k.val}</div>
-      <div class="kpi-sub">${k.sub}</div>
+  document.getElementById('kpi-grid').innerHTML=kpis.map(x=>`
+    <div class="kpi-card" data-c="${x.c}">
+      <span class="kpi-icon">${x.ic}</span>
+      <div class="kpi-label">${x.lbl}</div>
+      <div class="kpi-value">${x.val}</div>
+      <div class="kpi-sub">${x.sub}</div>
     </div>`).join('');
 
-  // ── FUNNEL ─────────────────────────────────────────────────────────────────
+  // ── FUNNEL ──────────────────────────────────────────────────────────────────
   const fSteps=[
-    {lbl:'Total AY26 Students', n:all.length,        col:'#3b82f6'},
-    {lbl:'Fresh Reg. (w/ free)',n:regWF.length,       col:'#8b5cf6'},
-    {lbl:'Fresh Reg. (w/o free)',n:regWoF.length,     col:'#06b6d4'},
-    {lbl:'Eligible for Batch',  n:eligible.length,    col:'#10b981'},
-    {lbl:'Batch Allotted',      n:batAllot.length,    col:'#f59e0b'},
+    {lbl:'Total AY26 Students',   n:k.total,     col:'#3b82f6'},
+    {lbl:'Reg. w/ Free',          n:k.reg_wf,    col:'#8b5cf6'},
+    {lbl:'Reg. w/o Free',         n:k.reg_wof,   col:'#06b6d4'},
+    {lbl:'Eligible for Batch',    n:k.eligible,  col:'#10b981'},
+    {lbl:'Batch Allotted',        n:k.bat_allot, col:'#f59e0b'},
   ];
   const fMax=fSteps[0].n;
   document.getElementById('funnel').innerHTML=fSteps.map(s=>`
     <div class="f-row">
       <div class="f-lbl">${s.lbl}</div>
-      <div class="f-bw">
-        <div class="f-bf" style="width:${pct(s.n,fMax)}%;background:${s.col}25;border-left:3px solid ${s.col}">
-          <span style="color:${s.col};font-size:10px">${pct(s.n,fMax)}%</span>
-        </div>
-      </div>
+      <div class="f-bw"><div class="f-bf" style="width:${pct(s.n,fMax)}%;background:${s.col}20;border-left:3px solid ${s.col}">
+        <span style="color:${s.col};font-size:10px">${pct(s.n,fMax)}%</span>
+      </div></div>
       <div class="f-num">${fmt(s.n)}</div>
     </div>`).join('');
 
-  // ── CENTER TABLE ───────────────────────────────────────────────────────────
-  document.getElementById('center-chip').textContent=`${centers.length} Centers`;
-  document.getElementById('center-tbody').innerHTML=centers.map(([c,rs])=>{
-    const rWF =rs.filter(isFresh).length;
-    const aWF =rs.filter(isAdm).length;
-    const rWoF=rs.filter(r=>isFresh(r)&&isPaid(r)).length;
-    const aWoF=rs.filter(r=>isAdm(r)&&isPaid(r)).length;
-    const ret =rs.filter(isRet).length;
-    const ltr =rs.filter(isLTR).length;
-    const elg =rs.filter(r=>isFresh(r)&&r.eligibility_status==='Eligible').length;
-    const bat =rs.filter(r=>isFresh(r)&&r.eligibility_status==='Eligible'&&r.batch&&r.batch.trim()!==''&&r.batch.trim().toLowerCase()!=='no batch').length;
-    const fAV =rs.filter(r=>isArpu(r)&&isFresh(r)&&isPaid(r)).map(arpuVal).filter(v=>v>0);
-    const fA  =avg(fAV);
-    const tF  =rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-    const tP  =rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    const cp  =pctN(tP,tF);
-    const sn  =c.replace(/vidyapeeth|tuition\s*center/gi,'').trim()||c;
-    return `<tr>
+  // ── ENROLLMENT DONUT ────────────────────────────────────────────────────────
+  const enL=D.enrollments.map(e=>e.name), enN=D.enrollments.map(e=>e.n);
+  mc('enrollChart',{type:'doughnut',data:{labels:enL,datasets:[{data:enN,backgroundColor:[C[2],C[0],C[3]],borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'62%',plugins:{...LR}}});
+
+  // ── CENTER TABLE ─────────────────────────────────────────────────────────────
+  document.getElementById('center-tbody').innerHTML=D.centers.map(c=>{
+    const sn=c.name.replace(/vidyapeeth|tuition\s*center/gi,'').trim()||c.name;
+    const cp=c.coll_pct;
+    return`<tr>
       <td><strong style="font-size:12px">${sn}</strong></td>
-      <td class="tc"><strong>${fmt(rs.length)}</strong></td>
-      <td class="tc">${fmt(rWF)}</td>
-      <td class="tc">${fmt(aWF)}</td>
-      <td class="tc"><span class="tag tag-blue">${fmt(rWoF)}</span></td>
-      <td class="tc"><span class="tag tag-teal">${fmt(aWoF)}</span></td>
-      <td class="tc"><span class="tag tag-purple">${fmt(ret)}</span></td>
-      <td class="tc"><span class="tag tag-orange">${fmt(ltr)}</span></td>
-      <td class="tc"><span class="tag tag-green">${fmt(elg)}</span></td>
-      <td class="tc"><span class="tag tag-blue">${fmt(bat)}</span><div style="font-size:9.5px;color:var(--text3);margin-top:2px">${elg?pct(bat,elg)+'%':''}</div></td>
-      <td class="tc" style="color:#fbbf24;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">${fA>0?'₹'+fmt(fA):'—'}</td>
+      <td class="tc"><strong>${fmt(c.total)}</strong></td>
+      <td class="tc">${fmt(c.reg_wf)}</td>
+      <td class="tc">${fmt(c.adm_wf)}</td>
+      <td class="tc"><span class="tag tag-blue">${fmt(c.reg_wof)}</span></td>
+      <td class="tc"><span class="tag tag-teal">${fmt(c.adm_wof)}</span></td>
+      <td class="tc"><span class="tag tag-purple">${fmt(c.retained)}</span></td>
+      <td class="tc"><span class="tag tag-orange">${fmt(c.ltr)}</span></td>
+      <td class="tc"><span class="tag tag-green">${fmt(c.eligible)}</span></td>
+      <td class="tc"><span class="tag tag-blue">${fmt(c.bat_allot)}</span>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">${c.eligible?pct(c.bat_allot,c.eligible)+'%':''}</div></td>
+      <td class="tc" style="color:#fbbf24;font-family:'Syne',sans-serif;font-weight:700;font-size:12px">${c.fresh_arpu>0?'₹'+fmt(c.fresh_arpu):'—'}</td>
       <td class="tc"><span class="tag ${cp>=80?'tag-green':cp>=50?'tag-orange':'tag-red'}">${cp.toFixed(1)}%</span></td>
     </tr>`;
   }).join('');
 
-  // ── ARPU CHARTS ────────────────────────────────────────────────────────────
-  const arpuOpts=(label,color)=>({...DEF,indexAxis:'y',
-    plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}},
-    scales:SC()});
+  // ── ARPU CHARTS ─────────────────────────────────────────────────────────────
+  const arpuBarOpts={...DEF,indexAxis:'y',plugins:{...LL,...RTIP},scales:SC()};
+  mc('freshArpuChart',{type:'bar',data:{labels:['Fresh ARPU'],datasets:[{data:[Math.round(k.fresh_arpu)],backgroundColor:['rgba(139,92,246,0.75)'],borderRadius:10,borderSkipped:false}]},options:arpuBarOpts});
+  mc('blendedArpuChart',{type:'bar',data:{labels:['Blended ARPU'],datasets:[{data:[Math.round(k.blended_arpu)],backgroundColor:['rgba(6,182,212,0.75)'],borderRadius:10,borderSkipped:false}]},options:arpuBarOpts});
 
-  mc('freshArpuChart',{type:'bar',
-    data:{labels:['Fresh ARPU'],datasets:[{data:[Math.round(freshArpu)],backgroundColor:['rgba(139,92,246,0.75)'],borderRadius:10,borderSkipped:false}]},
-    options:arpuOpts()});
-
-  mc('blendedArpuChart',{type:'bar',
-    data:{labels:['Blended ARPU'],datasets:[{data:[Math.round(blendArpu)],backgroundColor:['rgba(6,182,212,0.75)'],borderRadius:10,borderSkipped:false}]},
-    options:arpuOpts()});
-
-  // Center ARPU
-  const cA=centers.map(([c,rs])=>{
-    const v=rs.filter(r=>isArpu(r)&&isFresh(r)&&isPaid(r)).map(arpuVal).filter(v=>v>0);
-    return{lbl:c.replace(/vidyapeeth|tuition\s*center/gi,'').trim().substring(0,20),a:avg(v)};
-  }).filter(d=>d.a>0).sort((a,b)=>b.a-a.a).slice(0,12);
+  const cA=D.centers.filter(c=>c.fresh_arpu>0).sort((a,b)=>b.fresh_arpu-a.fresh_arpu).slice(0,12);
   mc('arpuCenterChart',{type:'bar',
-    data:{labels:cA.map(d=>d.lbl),datasets:[{data:cA.map(d=>Math.round(d.a)),backgroundColor:C.map(x=>x+'bb'),borderRadius:4}]},
-    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}}}});
+    data:{labels:cA.map(c=>c.name.replace(/vidyapeeth|tuition\s*center/gi,'').trim().substring(0,22)),datasets:[{data:cA.map(c=>Math.round(c.fresh_arpu)),backgroundColor:C.map(x=>x+'bb'),borderRadius:4}]},
+    options:{...DEF,scales:SC(),plugins:{...LL,...RTIP}}});
 
-  // Class ARPU
-  const clA={};
-  all.forEach(r=>{if(isArpu(r)&&isFresh(r)&&isPaid(r)){const cl=r.class_course||'Other';if(!clA[cl])clA[cl]=[];const v=arpuVal(r);if(v>0)clA[cl].push(v);}});
-  const clAE=Object.entries(clA).map(([k,v])=>({k,a:avg(v)})).sort((a,b)=>b.a-a.a);
   mc('arpuClassChart',{type:'bar',
-    data:{labels:clAE.map(d=>d.k),datasets:[{data:clAE.map(d=>Math.round(d.a)),backgroundColor:C.map(x=>x+'bb'),borderRadius:4}]},
-    options:{...DEF,indexAxis:'y',scales:SC(),plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}}}});
+    data:{labels:D.class_arpu.map(d=>d.name),datasets:[{data:D.class_arpu.map(d=>Math.round(d.arpu)),backgroundColor:C.map(x=>x+'bb'),borderRadius:4}]},
+    options:{...DEF,indexAxis:'y',scales:SC(),plugins:{...LL,...RTIP}}});
 
-  // ── FEE CHARTS ─────────────────────────────────────────────────────────────
-  const fD=centers.slice(0,15).map(([c,rs])=>{
-    const tF=rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-    const tP=rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    return{lbl:c.replace(/vidyapeeth|tuition\s*center/gi,'').trim().substring(0,18),fees:tF,paid:tP,cp:pctN(tP,tF)};
-  });
+  // ── FEE CHARTS ──────────────────────────────────────────────────────────────
+  const fD=D.centers.slice(0,15).map(c=>({lbl:c.name.replace(/vidyapeeth|tuition\s*center/gi,'').trim().substring(0,18),fees:c.fees_amt,paid:c.fees_paid,cp:c.coll_pct}));
   mc('feeChart',{type:'bar',
     data:{labels:fD.map(d=>d.lbl),datasets:[
-      {label:'Billed',data:fD.map(d=>Math.round(d.fees)),backgroundColor:'rgba(99,102,241,0.6)',borderRadius:4},
-      {label:'Collected',data:fD.map(d=>Math.round(d.paid)),backgroundColor:'rgba(16,185,129,0.6)',borderRadius:4}]},
-    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,tooltip:{callbacks:{label:ctx=>' ₹'+ctx.raw.toLocaleString('en-IN')}}}}});
+      {label:'Billed',  data:fD.map(d=>Math.round(d.fees)),backgroundColor:'rgba(99,102,241,0.65)',borderRadius:4},
+      {label:'Collected',data:fD.map(d=>Math.round(d.paid)),backgroundColor:'rgba(16,185,129,0.65)',borderRadius:4}
+    ]},
+    options:{...DEF,scales:SC(),plugins:{legend:{labels:{color:'#64748b',font:{size:11},boxWidth:10}},tooltip:{callbacks:{label:ctx=>' ₹'+Math.round(ctx.raw).toLocaleString('en-IN')}}}}});
 
   mc('feeRateChart',{type:'bar',
     data:{labels:fD.map(d=>d.lbl),datasets:[{label:'Collection %',data:fD.map(d=>d.cp),
       backgroundColor:fD.map(d=>d.cp>=80?'rgba(16,185,129,0.7)':d.cp>=50?'rgba(245,158,11,0.7)':'rgba(239,68,68,0.7)'),borderRadius:4}]},
     options:{...DEF,scales:{...SC(),y:{...SC().y,max:100,ticks:{...SC().y.ticks,callback:v=>v+'%'}}},
-      plugins:{...DEF.plugins,legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)}%`}}}}});
+      plugins:{...LL,tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toFixed(1)}%`}}}}});
 
-  document.getElementById('fee-tbody').innerHTML=centers.map(([c,rs])=>{
-    const tF=rs.reduce((s,r)=>s+(parseFloat(r.fees_amt)||0),0);
-    const tP=rs.reduce((s,r)=>s+(parseFloat(r.fees_paid)||0),0);
-    const pend=tF-tP; const cp=pctN(tP,tF);
-    return`<tr><td>${c}</td><td class="tc">${fmt(rs.length)}</td><td>${fmtC(tF)}</td><td>${fmtC(tP)}</td>
+  document.getElementById('fee-tbody').innerHTML=D.centers.map(c=>{
+    const pend=c.fees_amt-c.fees_paid; const cp=c.coll_pct;
+    return`<tr><td>${c.name}</td><td class="tc">${fmt(c.total)}</td><td>${fmtC(c.fees_amt)}</td><td>${fmtC(c.fees_paid)}</td>
       <td style="color:${pend>0?'#f87171':'#34d399'}">${fmtC(pend)}</td>
       <td><span class="tag ${cp>=80?'tag-green':cp>=50?'tag-orange':'tag-red'}">${cp.toFixed(1)}%</span></td></tr>`;
   }).join('');
 
-  // ── PAYMENT GRID ───────────────────────────────────────────────────────────
-  document.getElementById('payment-grid').innerHTML=PL.map((p,i)=>{
-    const cnt=pCnt[p];
-    return`<div class="pay-card">
-      <div class="pay-label">${p}</div>
-      <div class="pay-count" style="color:${PC[i]}">${fmt(cnt)}</div>
-      <div class="pay-pct">${pct(cnt,all.length)}% of total</div>
-      <div class="bar" style="margin-top:10px"><div class="bar-fill" style="width:${pct(cnt,all.length)}%;background:${PC[i]}"></div></div>
-    </div>`;
-  }).join('');
+  // ── PAYMENT GRID ─────────────────────────────────────────────────────────────
+  const PC=['#10b981','#3b82f6','#8b5cf6','#22d3ee','#f59e0b','#f97316','#ef4444'];
+  document.getElementById('payment-grid').innerHTML=D.payments.map((p,i)=>`
+    <div class="pay-card">
+      <div class="pay-label">${p.name}</div>
+      <div class="pay-count" style="color:${PC[i]}">${fmt(p.n)}</div>
+      <div class="pay-pct">${pct(p.n,k.total)}% of total</div>
+      <div class="bar" style="margin-top:10px"><div class="bar-fill" style="width:${pct(p.n,k.total)}%;background:${PC[i]}"></div></div>
+    </div>`).join('');
 
-  // ── MONTH / DAY ────────────────────────────────────────────────────────────
-  const mC={};all.forEach(r=>{if(r.month)mC[r.month]=(mC[r.month]||0)+1;});
-  const mL=MONTHS.filter(m=>mC[m]);
-  mc('monthChart',{type:'bar',
-    data:{labels:mL,datasets:[{label:'Admissions',data:mL.map(m=>mC[m]),
-      backgroundColor:mL.map((_,i)=>C[i%C.length]+'cc'),borderColor:mL.map((_,i)=>C[i%C.length]),borderWidth:1,borderRadius:6}]},
-    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,legend:{display:false}}}});
+  // ── MONTH / DAY ──────────────────────────────────────────────────────────────
+  mc('monthChart',{type:'bar',data:{labels:D.months.map(m=>m.m),datasets:[{label:'Admissions',data:D.months.map(m=>m.n),
+    backgroundColor:D.months.map((_,i)=>C[i%C.length]+'cc'),borderColor:D.months.map((_,i)=>C[i%C.length]),borderWidth:1,borderRadius:6}]},
+    options:{...DEF,scales:SC(),plugins:{...LL}}});
 
-  const dC={};all.forEach(r=>{if(r.day){const d=parseInt(r.day);if(!isNaN(d))dC[d]=(dC[d]||0)+1;}});
-  const dL=Object.keys(dC).map(Number).sort((a,b)=>a-b);
-  mc('dayChart',{type:'line',
-    data:{labels:dL,datasets:[{label:'Admissions',data:dL.map(d=>dC[d]),
-      borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#3b82f6',pointBorderColor:'transparent'}]},
-    options:{...DEF,scales:SC(),plugins:{...DEF.plugins,legend:{display:false}}}});
+  mc('dayChart',{type:'line',data:{labels:D.days.map(d=>d.d),datasets:[{label:'Admissions',data:D.days.map(d=>d.n),
+    borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#3b82f6',pointBorderColor:'transparent'}]},
+    options:{...DEF,scales:SC(),plugins:{...LL}}});
 
-  // ── DONUTS ─────────────────────────────────────────────────────────────────
-  const mkD=(id,entries,colors,pos='bottom')=>mc(id,{type:'doughnut',
-    data:{labels:entries.map(([k])=>k),datasets:[{data:entries.map(([,v])=>v),backgroundColor:colors,borderWidth:0,hoverOffset:8}]},
+  // ── DONUTS ───────────────────────────────────────────────────────────────────
+  const mkD=(id,labels,data_,colors,pos='bottom')=>mc(id,{type:'doughnut',
+    data:{labels,datasets:[{data:data_,backgroundColor:colors,borderWidth:0,hoverOffset:8}]},
     options:{...DEF,cutout:'62%',plugins:{legend:{position:pos,labels:{color:'#64748b',font:{size:10},boxWidth:10,padding:10}}}}});
 
-  const clC={};all.forEach(r=>{if(r.class_course)clC[r.class_course]=(clC[r.class_course]||0)+1;});
-  mkD('classChart',Object.entries(clC).sort((a,b)=>b[1]-a[1]),C);
+  mkD('classChart',D.classes.map(c=>c.name),D.classes.map(c=>c.n),C,'right');
+  mkD('boardChart',D.boards.map(b=>b.name),D.boards.map(b=>b.n),[C[2],C[0],C[1],C[3],C[4]],'bottom');
+  mkD('wingChart', D.wings.map(w=>w.name), D.wings.map(w=>w.n), [C[0],C[2]],'bottom');
 
-  const bC={};all.forEach(r=>{const b=r.board_name||'Unknown';bC[b]=(bC[b]||0)+1;});
-  mkD('boardChart',Object.entries(bC).filter(([k])=>k).sort((a,b)=>b[1]-a[1]),[C[2],C[0],C[1],C[3],C[4]]);
-
-  const wC={};all.forEach(r=>{const w=r.wing||r.Wing||'Unknown';wC[w]=(wC[w]||0)+1;});
-  mkD('wingChart',Object.entries(wC),[C[0],C[2],C[3],C[1]]);
-
-  const enC={};all.forEach(r=>{const e=r.ay26_enrollment_status||'Unknown';enC[e]=(enC[e]||0)+1;});
-  mc('enrollChart',{type:'doughnut',
-    data:{labels:Object.entries(enC).sort((a,b)=>b[1]-a[1]).map(([k])=>k),
-      datasets:[{data:Object.entries(enC).sort((a,b)=>b[1]-a[1]).map(([,v])=>v),backgroundColor:[C[2],C[0],C[3],C[1],C[4]],borderWidth:0,hoverOffset:8}]},
-    options:{...DEF,cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#64748b',font:{size:11},boxWidth:10,padding:10}}}}});
-
-  // ── ELIGIBILITY & BATCH ────────────────────────────────────────────────────
+  // ── ELIGIBILITY ──────────────────────────────────────────────────────────────
   mc('eligChart',{type:'doughnut',
-    data:{labels:['Eligible','Not Eligible'],datasets:[{data:[eligible.length,notElig.length],backgroundColor:['#10b981','#ef4444'],borderWidth:0,hoverOffset:8}]},
-    options:{...DEF,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{size:11},boxWidth:10,padding:10}},
-      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw,regWF.length)}% of fresh)`}}}}});
+    data:{labels:['Eligible','Not Eligible'],datasets:[{data:[D.eligible_n,D.not_elig_n],backgroundColor:['#10b981','#ef4444'],borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'65%',plugins:{...LB}}});
   document.getElementById('elig-stats').innerHTML=`
-    <div><div class="s-label">Eligible</div><div class="s-val" style="color:#34d399">${fmt(eligible.length)}</div><div class="s-sub">${pct(eligible.length,regWF.length)}% of fresh registrations</div></div>
-    <div><div class="s-label">Not Eligible</div><div class="s-val" style="color:#f87171">${fmt(notElig.length)}</div><div class="s-sub">${pct(notElig.length,regWF.length)}% of fresh registrations</div></div>`;
+    <div><div class="s-label">Eligible</div><div class="s-val" style="color:#34d399">${fmt(D.eligible_n)}</div><div class="s-sub">${pct(D.eligible_n,D.reg_wf_n)}% of fresh registrations</div></div>
+    <div><div class="s-label">Not Eligible</div><div class="s-val" style="color:#f87171">${fmt(D.not_elig_n)}</div><div class="s-sub">${pct(D.not_elig_n,D.reg_wf_n)}% of fresh registrations</div></div>`;
 
   mc('batchChart',{type:'doughnut',
-    data:{labels:['Allotted','Pending'],datasets:[{data:[batAllot.length,batPend.length],backgroundColor:['#3b82f6','#f59e0b'],borderWidth:0,hoverOffset:8}]},
-    options:{...DEF,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{size:11},boxWidth:10,padding:10}},
-      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw,eligible.length)}% of eligible)`}}}}});
+    data:{labels:['Allotted','Pending'],datasets:[{data:[D.bat_allot_n,D.bat_pend_n],backgroundColor:['#3b82f6','#f59e0b'],borderWidth:0,hoverOffset:8}]},
+    options:{...DEF,cutout:'65%',plugins:{...LB}}});
   document.getElementById('batch-stats').innerHTML=`
-    <div><div class="s-label">Allotted</div><div class="s-val" style="color:#60a5fa">${fmt(batAllot.length)}</div><div class="s-sub">${pct(batAllot.length,eligible.length)}% of eligible</div></div>
-    <div><div class="s-label">Pending</div><div class="s-val" style="color:#fbbf24">${fmt(batPend.length)}</div><div class="s-sub">${pct(batPend.length,eligible.length)}% of eligible</div></div>`;
-
-  // ── SHOW ───────────────────────────────────────────────────────────────────
-  const now=new Date();
-  document.getElementById('last-updated').textContent=`Last updated: ${now.toLocaleTimeString('en-IN')}`;
-  document.getElementById('row-pill').textContent=`${fmt(all.length)} Students`;
-  document.getElementById('footer-time').textContent=now.toLocaleString('en-IN');
-  document.getElementById('loading').style.display='none';
-  document.getElementById('dashboard').style.display='block';
-}
-
-loadData();
+    <div><div class="s-label">Allotted</div><div class="s-val" style="color:#60a5fa">${fmt(D.bat_allot_n)}</div><div class="s-sub">${pct(D.bat_allot_n,D.eligible_n)}% of eligible</div></div>
+    <div><div class="s-label">Pending</div><div class="s-val" style="color:#fbbf24">${fmt(D.bat_pend_n)}</div><div class="s-sub">${pct(D.bat_pend_n,D.eligible_n)}% of eligible</div></div>`;
+})();
 </script>
 </body>
 </html>
