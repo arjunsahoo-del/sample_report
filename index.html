@@ -501,7 +501,7 @@ async function loadData() {
 
 // ─── BUILD DASHBOARD ──────────────────────────────────────────────────────────
 function buildDashboard(rows) {
-  // Normalise keys to lowercase with underscores (Apps Script may vary)
+  // Normalise keys to lowercase with underscores
   const norm = rows.map(r => {
     const o = {};
     Object.keys(r).forEach(k => { o[k.trim().toLowerCase().replace(/\s+/g,'_')] = String(r[k]||'').trim(); });
@@ -524,21 +524,76 @@ function buildDashboard(rows) {
     return;
   }
 
-  // ── KPIs ──
-  const fresh      = ay26.filter(r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status));
-  const freeEnroll = fresh.filter(r => r.free_admission?.toUpperCase() === 'TRUE');
-  const paidEnroll = fresh.filter(r => r.free_admission?.toUpperCase() === 'FALSE');
-  const retained   = ay26.filter(r => r.ay26_enrollment_status === 'Retained');
-  const arpu_rows  = ay26.filter(r => (r.arpu_check||'').toLowerCase() === 'yes');
-  const arpu_vals  = arpu_rows.map(r => parseFloat(r.arpu||0)).filter(v => !isNaN(v) && v > 0);
+  // ════════════════════════════════════════════════════════
+  // BUSINESS LOGIC — single source of truth
+  // ════════════════════════════════════════════════════════
+
+  // ── REGISTRATION / ENROLLMENT ──
+  // Fresh registration = ay26_enrollment_status IN ('Admission', 'Registration Only')
+  const isFresh  = r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status);
+  // Free enrollment  = fresh AND free_admission = TRUE
+  const isFree   = r => isFresh(r) && r.free_admission.toUpperCase() === 'TRUE';
+  // Paid enrollment  = fresh AND free_admission = FALSE
+  const isPaid   = r => isFresh(r) && r.free_admission.toUpperCase() === 'FALSE';
+  // Retained
+  const isRetained = r => r.ay26_enrollment_status === 'Retained';
+  // Less than Registration
+  const isLTR    = r => r.ay26_enrollment_status === 'Less than Registration';
+
+  const fresh      = ay26.filter(isFresh);
+  const freeEnroll = ay26.filter(isFree);
+  const paidEnroll = ay26.filter(isPaid);
+  const retained   = ay26.filter(isRetained);
+  const ltrAll     = ay26.filter(isLTR);
+
+  // ── ARPU ──
+  // ARPU = average of `arpu` column WHERE arpu_check = 'Yes'
+  const arpu_rows = ay26.filter(r => r.arpu_check.toLowerCase() === 'yes');
+  const arpu_vals = arpu_rows.map(r => parseFloat(r.arpu||0)).filter(v => !isNaN(v) && v > 0);
   const overallArpu = avg(arpu_vals);
 
+  // ── FEES ──
   const totalFees = ay26.reduce((s,r) => s + (parseFloat(r.fees_amt)||0), 0);
   const totalPaid = ay26.reduce((s,r) => s + (parseFloat(r.fees_paid)||0), 0);
 
-  const eligible  = ay26.filter(r => (r.eligibility_status||'') === 'Eligible');
-  const allocated = ay26.filter(r => r.batch && r.batch !== '' && r.batch !== 'No Batch');
+  // ── ELIGIBILITY ──
+  // eligible_for_batch = eligibility_status === 'Eligible'
+  const eligible    = ay26.filter(r => r.eligibility_status === 'Eligible');
+  const notEligible = ay26.filter(r => r.eligibility_status !== 'Eligible');
 
+  // ── BATCH ALLOCATION ──
+  // Among eligible students:
+  //   NOT allocated = batch === 'No Batch' (or empty)
+  //   Allocated     = batch contains a real code (e.g. 14-LN101EA) — anything that is NOT 'No Batch' and not blank
+  const isBatchAllocated   = r => r.batch && r.batch.trim() !== '' && r.batch.trim().toLowerCase() !== 'no batch';
+  const isBatchNotAllocated = r => !r.batch || r.batch.trim() === '' || r.batch.trim().toLowerCase() === 'no batch';
+
+  const allocated    = eligible.filter(isBatchAllocated);
+  const notAllocated = eligible.filter(isBatchNotAllocated);
+
+  // ── PAYMENT CHECKS ──
+  // Exact labels from newpayment_checks column
+  const PAY_LABELS = [
+    '1st EMI Paid',
+    '2nd EMI Paid',
+    '3rd EMI Paid',
+    'Total Paid',
+    'Token Only',
+    'Paid btw Token & 1st EMI',
+    'Less than Token'
+  ];
+  const PAY_COLORS = ['#10b981','#3b82f6','#8b5cf6','#22d3ee','#f59e0b','#f97316','#ef4444'];
+
+  const payCount = {};
+  PAY_LABELS.forEach(p => payCount[p] = 0);
+  ay26.forEach(r => {
+    const v = r.newpayment_checks;
+    if (v && payCount.hasOwnProperty(v)) payCount[v]++;
+  });
+
+  // ════════════════════════════════════════════════════════
+  // KPI CARDS
+  // ════════════════════════════════════════════════════════
   document.getElementById('kpi-grid').innerHTML = `
     <div class="kpi-card blue">
       <div class="kpi-label">Total AY26 Students</div>
@@ -551,38 +606,40 @@ function buildDashboard(rows) {
       <div class="kpi-sub">Admission + Registration Only</div>
     </div>
     <div class="kpi-card purple">
-      <div class="kpi-label">Paid Enrollments</div>
+      <div class="kpi-label">Admission w/o Free Enroll</div>
       <div class="kpi-value">${fmt(paidEnroll.length)}</div>
-      <div class="kpi-sub">w/o free enrollment</div>
+      <div class="kpi-sub">Fresh & free_admission = FALSE</div>
     </div>
     <div class="kpi-card teal">
       <div class="kpi-label">Free Enrollments</div>
       <div class="kpi-value">${fmt(freeEnroll.length)}</div>
-      <div class="kpi-sub">Free admission students</div>
+      <div class="kpi-sub">Fresh & free_admission = TRUE</div>
     </div>
     <div class="kpi-card orange">
       <div class="kpi-label">Overall ARPU</div>
       <div class="kpi-value">₹${Math.round(overallArpu/1000)}K</div>
-      <div class="kpi-sub">${fmt(arpu_vals.length)} students (arpu_check=Yes)</div>
+      <div class="kpi-sub">Avg of arpu col (arpu_check=Yes) · ${fmt(arpu_vals.length)} students</div>
     </div>
     <div class="kpi-card pink">
       <div class="kpi-label">Fee Collection %</div>
       <div class="kpi-value">${pct(totalPaid, totalFees)}%</div>
-      <div class="kpi-sub">₹${Math.round(totalPaid/10000000)}Cr of ₹${Math.round(totalFees/10000000)}Cr</div>
+      <div class="kpi-sub">${fmtC(totalPaid)} collected of ${fmtC(totalFees)}</div>
     </div>
     <div class="kpi-card blue">
-      <div class="kpi-label">Eligible Students</div>
+      <div class="kpi-label">Eligible for Batch</div>
       <div class="kpi-value">${fmt(eligible.length)}</div>
-      <div class="kpi-sub">${pct(eligible.length, ay26.length)}% of total</div>
+      <div class="kpi-sub">eligibility_status = Eligible · ${pct(eligible.length, ay26.length)}% of total</div>
     </div>
     <div class="kpi-card green">
       <div class="kpi-label">Batch Allocated</div>
       <div class="kpi-value">${fmt(allocated.length)}</div>
-      <div class="kpi-sub">${pct(allocated.length, ay26.length)}% allocated</div>
+      <div class="kpi-sub">Of ${fmt(eligible.length)} eligible · ${pct(allocated.length, eligible.length)}% allocated</div>
     </div>
   `;
 
-  // ── CENTER TABLE ──
+  // ════════════════════════════════════════════════════════
+  // CENTER TABLE
+  // ════════════════════════════════════════════════════════
   const centerMap = {};
   ay26.forEach(r => {
     const c = r.center || 'Unknown';
@@ -591,16 +648,18 @@ function buildDashboard(rows) {
   });
   const centers = Object.entries(centerMap).sort((a,b) => b[1].length - a[1].length);
   document.getElementById('center-total-label').textContent = `${centers.length} Centers`;
+
   document.getElementById('center-tbody').innerHTML = centers.map(([c, rs]) => {
-    const fr  = rs.filter(r => ['Admission','Registration Only'].includes(r.ay26_enrollment_status));
-    const wo  = fr.filter(r => r.free_admission?.toUpperCase() === 'FALSE');
-    const fe  = fr.filter(r => r.free_admission?.toUpperCase() === 'TRUE');
-    const ret = rs.filter(r => r.ay26_enrollment_status === 'Retained');
-    const ltr = rs.filter(r => r.ay26_enrollment_status === 'Less than Registration');
+    const fr  = rs.filter(isFresh);
+    const wo  = rs.filter(isPaid);
+    const fe  = rs.filter(isFree);
+    const ret = rs.filter(isRetained);
+    const ltr = rs.filter(isLTR);
     const share = ((rs.length / ay26.length) * 100).toFixed(1);
-    const shortName = c.replace(/Vidyapeeth|Tuition Center/g,'').trim();
+    const shortName = c.replace(/Vidyapeeth|Tuition\s*Center/gi,'').trim() || c;
+    const typeLabel = /vidyapeeth/i.test(c) ? 'Vidyapeeth' : 'Tuition Center';
     return `<tr>
-      <td><strong>${shortName}</strong><div style="font-size:10px;color:var(--muted)">${c.includes('Vidyapeeth')?'Vidyapeeth':'Tuition Center'}</div></td>
+      <td><strong>${shortName}</strong><div style="font-size:10px;color:var(--muted)">${typeLabel}</div></td>
       <td><span class="num">${fmt(rs.length)}</span></td>
       <td><span class="num">${fmt(fr.length)}</span></td>
       <td><span class="tag tag-blue">${fmt(wo.length)}</span></td>
@@ -701,18 +760,21 @@ function buildDashboard(rows) {
   }).join('');
 
   // ── ARPU CHARTS ──
+  // Overall ARPU — single value bar
   makeChart('arpuOverallChart', {
     type:'bar',
-    data:{ labels:['Overall ARPU'],
+    data:{ labels:['Overall ARPU (arpu_check=Yes)'],
       datasets:[{ data:[Math.round(overallArpu)], backgroundColor:['rgba(139,92,246,0.8)'], borderRadius:8, borderSkipped:false }] },
     options:{ ...CHART_DEFAULTS, indexAxis:'y',
       plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'₹'+ctx.raw.toLocaleString('en-IN')}} },
       scales:darkScales() }
   });
 
+  // Center-wise ARPU — avg of arpu where arpu_check=Yes, per center
   const centerArpu = centers.map(([c,rs])=>{
-    const aV = rs.filter(r=>(r.arpu_check||'').toLowerCase()==='yes').map(r=>parseFloat(r.arpu||0)).filter(v=>!isNaN(v)&&v>0);
-    return { label:c.replace(/- |Vidyapeeth|Tuition Center/g,'').trim().substring(0,15), arpu:avg(aV) };
+    const aV = rs.filter(r => r.arpu_check.toLowerCase() === 'yes')
+                 .map(r => parseFloat(r.arpu||0)).filter(v=>!isNaN(v)&&v>0);
+    return { label: c.replace(/- |Vidyapeeth|Tuition\s*Center/gi,'').trim().substring(0,18), arpu: avg(aV) };
   }).filter(d=>d.arpu>0).sort((a,b)=>b.arpu-a.arpu).slice(0,10);
   makeChart('arpuCenterChart', {
     type:'bar',
@@ -723,16 +785,19 @@ function buildDashboard(rows) {
       scales:darkScales() }
   });
 
-  const classArpu = {};
+  // Class-wise ARPU — avg of arpu where arpu_check=Yes, per class_course
+  const classArpuMap = {};
   ay26.forEach(r => {
-    if((r.arpu_check||'').toLowerCase()==='yes'){
-      const cl=r.class_course||'Unknown';
-      if(!classArpu[cl]) classArpu[cl]=[];
-      const v=parseFloat(r.arpu||0);
-      if(!isNaN(v)&&v>0) classArpu[cl].push(v);
+    if(r.arpu_check.toLowerCase() === 'yes'){
+      const cl = r.class_course || 'Unknown';
+      if(!classArpuMap[cl]) classArpuMap[cl] = [];
+      const v = parseFloat(r.arpu||0);
+      if(!isNaN(v) && v>0) classArpuMap[cl].push(v);
     }
   });
-  const classArpuE = Object.entries(classArpu).map(([k,v])=>({label:k,arpu:avg(v)})).sort((a,b)=>b.arpu-a.arpu);
+  const classArpuE = Object.entries(classArpuMap)
+    .map(([k,v])=>({label:k, arpu:avg(v)}))
+    .sort((a,b)=>b.arpu-a.arpu);
   makeChart('arpuClassChart', {
     type:'bar',
     data:{ labels:classArpuE.map(d=>d.label),
@@ -743,44 +808,37 @@ function buildDashboard(rows) {
   });
 
   // ── ELIGIBILITY ──
-  const eligCount = {};
-  ay26.forEach(r => {
-    const key = (r.eligibility_status||'') === 'Eligible' ? 'Eligible' : 'Not Eligible';
-    eligCount[key]=(eligCount[key]||0)+1;
-  });
+  // Uses pre-computed eligible / notEligible arrays
   makeChart('eligChart', {
     type:'doughnut',
-    data:{ labels:Object.keys(eligCount),
-      datasets:[{ data:Object.values(eligCount), backgroundColor:['#10b981','#ef4444'], borderWidth:0 }] },
+    data:{ labels:['Eligible','Not Eligible'],
+      datasets:[{ data:[eligible.length, notEligible.length], backgroundColor:['#10b981','#ef4444'], borderWidth:0 }] },
     options:{ ...CHART_DEFAULTS, cutout:'65%',
-      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
+      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} },
+        tooltip:{ callbacks:{ label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw, ay26.length)}%)` } } } }
   });
 
   // ── BATCH ALLOCATION ──
-  const eligS    = ay26.filter(r=>(r.eligibility_status||'')==='Eligible');
-  const batchA   = eligS.filter(r=>r.batch&&r.batch!==''&&r.batch!=='No Batch');
-  const batchNA  = eligS.filter(r=>!r.batch||r.batch===''||r.batch==='No Batch');
+  // Among ELIGIBLE students only: allocated (has batch code) vs not allocated ('No Batch' / blank)
   makeChart('batchChart', {
     type:'doughnut',
     data:{ labels:['Batch Allocated','Not Allocated'],
-      datasets:[{ data:[batchA.length,batchNA.length], backgroundColor:['#3b82f6','#f59e0b'], borderWidth:0 }] },
+      datasets:[{ data:[allocated.length, notAllocated.length], backgroundColor:['#3b82f6','#f59e0b'], borderWidth:0 }] },
     options:{ ...CHART_DEFAULTS, cutout:'65%',
-      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} } } }
+      plugins:{ legend:{ position:'bottom', labels:{color:'#94a3b8',font:{size:11},boxWidth:12} },
+        tooltip:{ callbacks:{ label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${pct(ctx.raw, eligible.length)}% of eligible)` } } } }
   });
 
   // ── PAYMENT SPLIT ──
-  const payOrder  = ['1st EMI Paid','2nd EMI Paid','3rd EMI Paid','Total Paid','Token Only','Paid btw Token & 1st EMI','Less than Token'];
-  const payColors = ['#10b981','#3b82f6','#8b5cf6','#10b981','#f59e0b','#f59e0b','#ef4444'];
-  const payCount  = {};
-  ay26.forEach(r => { if(r.newpayment_checks) payCount[r.newpayment_checks]=(payCount[r.newpayment_checks]||0)+1; });
-  document.getElementById('payment-grid').innerHTML = payOrder.map((p,i)=>{
-    const cnt=payCount[p]||0;
+  // Uses pre-computed payCount (keyed by PAY_LABELS, initialised to 0)
+  document.getElementById('payment-grid').innerHTML = PAY_LABELS.map((p,i)=>{
+    const cnt = payCount[p] || 0;
     return `<div class="payment-card">
       <div class="payment-label">${p}</div>
       <div class="payment-count">${fmt(cnt)}</div>
       <div class="payment-pct">${pct(cnt,ay26.length)}% of total</div>
       <div class="progress-bar" style="margin-top:8px">
-        <div class="progress-fill" style="width:${pct(cnt,ay26.length)}%;background:${payColors[i]}"></div>
+        <div class="progress-fill" style="width:${pct(cnt,ay26.length)}%;background:${PAY_COLORS[i]}"></div>
       </div>
     </div>`;
   }).join('');
